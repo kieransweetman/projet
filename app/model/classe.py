@@ -8,8 +8,13 @@ schema = {
                     "description" : "must be a string and is required"
                 },
                 "prof": {
-                    "bsonType":"object"
+                    "prof_id": "ObjectId"
                 },
+                "eleve": [
+                    {
+                        "eleve_id": "ObjectId",
+                    },
+                ],
             }
         }
 }

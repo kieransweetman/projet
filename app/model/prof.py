@@ -26,6 +26,11 @@ schema = {"$jsonSchema": {
                     "bsonType": "string",
                     "description": "must be a string and is required"
                 },
+                "classes":[
+                    {
+                        "classe_id": "ObjectId"
+                    }
+                ]
             },
         },
           }

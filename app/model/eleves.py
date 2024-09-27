@@ -16,7 +16,7 @@ schema = {"$jsonSchema": {
                 },
                 "adresse": {
                     "bsonType": "object",
-                    "required": [ "code_postal" ],
+                    # "required": [ "code_postal" ],
                     "properties": {
                         "street": { "bsonType": "string" },
                         "code_postal": { "bsonType": "string" }   
@@ -28,14 +28,13 @@ schema = {"$jsonSchema": {
                 },
                 "classe": {
                     "bsonType": "object",
-                    "required": [ "note" ],
+                    # "required": [ "note" ],
+                    "classe_id" : "ObjectId",
                     "notes": [
                         {
-                        "trimestre" : {
-                            "nom":"string",
-                            "date":"string"  
-                        },
-                        "note": "int"
+                            "_id":"ObjectId",
+                            "trimestre_id":"ObjectId",
+                            "note": "int"
                         }
                     ]
                 },

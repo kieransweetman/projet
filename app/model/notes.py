@@ -3,6 +3,11 @@ schema = {
             "bsonType": "object",
             "required": [ "note", "avis", "avancement", "date_saisie"],
             "properties": {
+                # "_id": "ObjectId",
+                "eleve_id": "ObjectId",
+                "trimestre_id": "ObjectId",
+                "classe_id": "ObjectId",
+                "matiere_id": "ObjectId",
                 "note": {
                     "bsonType": "int",
                     "description" : "must be an int and is required"
