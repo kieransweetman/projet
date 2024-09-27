@@ -29,7 +29,7 @@ db.create_collection(
         },
     })
 
-collection=db['eleve']
+collection1=db['eleve']
 
 db.create_collection(
     'prof',
@@ -51,7 +51,7 @@ db.create_collection(
         },
     })
 
-collection=db['prof']
+collection2=db['prof']
 
 db.create_collection(
     'classe',
@@ -68,7 +68,7 @@ db.create_collection(
     }
 )
 
-collection=db['classe']
+collection3=db['classe']
 
 db.create_collection(
     'matiere',
@@ -83,7 +83,7 @@ db.create_collection(
     }
 )
 
-collection=db['matiere']
+collection4=db['matiere']
 
 db.create_collection(
     'trimestre',
@@ -101,7 +101,7 @@ db.create_collection(
     }
 )
 
-collection=db['trimestre']
+collection5=db['trimestre']
 
 db.create_collection(
     'notes',
@@ -123,4 +123,4 @@ db.create_collection(
     }
 )
 
-collection=db['notes']
+collection6=db['notes']
