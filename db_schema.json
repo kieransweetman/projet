@@ -1,0 +1,73 @@
+// teacher collection
+{
+    "_id": ObjectId("teacher_id"),
+    "nom": "Smith",
+    "prenom": "John",
+    "date_naissance": "1975-05-20",
+    "adresse": "123 Main St",
+    "sexe": "M",
+    "classes": [
+        {
+            "class_id": ObjectId("class_101"),
+            "nom": "Math 101"
+        }
+    ]
+}
+// student collection
+{
+    "_id": ObjectId("student_id"),
+    "nom": "Alice",
+    "prenom": "Brown",
+    "date_naissance": "2005-01-01",
+    "adresse": "789 School St",
+    "sexe": "F",
+    "classes": [
+        {
+            "class_id": ObjectId("class_101"),
+            "notes": [
+                {
+                    "_id": ObjectId("note_id"),
+                    "trimester_id": ObjectId("trim_2024"),
+                    "note": 85
+                }
+            ]
+        },
+    ],
+}
+// class collection 
+{
+    "_id": ObjectId("class_101"),
+    "nom": "Math 101",
+    "subject": ObjectId("subject_101"),
+    "teacher": {
+        "_id": ObjectId("teacher_id"),
+    },
+    "students": [
+        {
+            "student_id": ObjectId("student_1"),
+        },
+    ],
+}
+// grades
+{
+    "_id": ObjectId("note_id"),
+    "student_id": ObjectId("student_1"),
+    "trimester_id": ObjectId("trim_2024"),
+    "class_id": ObjectId("class_101"),
+    "matiere": ObjectId("subject_101"),
+    "note": 85,
+    "avis": "Good progress",
+    "avancement": "Excellent",
+    "date_saisie": "2024-06-01"
+}
+// subject
+{
+    "_id": ObjectId("subject_101"),
+    "nom": "Mathematics"
+}
+// trimester 
+{
+    "_id": ObjectId("trim_2024"),
+    "nom": "Trimester 1",
+    "date": "2024-03-01"
+}
