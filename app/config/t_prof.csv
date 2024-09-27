@@ -1,0 +1,4 @@
+"id","nom","prenom","date_naissance","adresse","sexe"
+1,GERMAIN,Christophe,1971-01-01 23:00:00.000,"15 rue du printemps 59000 LILLE",HOMME
+2,LOUREIRO,Julie,1982-01-07 23:00:00.000,"72 av. Matigon 75003 Paris",FEMME
+3,SIMON,Jean,1992-01-16 23:00:00.000,"2 rue du Moulin 92230 Neullavy",HOMME
