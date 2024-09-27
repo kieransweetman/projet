@@ -1,3 +1,4 @@
 db/data/*
-docker-compose.yml
+skeleton-compose.yml
 .venv
+.env
