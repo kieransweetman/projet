@@ -23,7 +23,7 @@ services:
       - MONGO_INITDB_ROOT_USERNAME= # Add your username
       - MONGO_INITDB_ROOT_PASSWORD= # pass 
     volumes:
-      - mongodb-data:/data/db
+      - ./db/data:/data/db
     networks:
       - mongoDbTp
     healthcheck:
