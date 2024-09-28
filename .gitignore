@@ -2,3 +2,4 @@ db/data/*
 .venv
 .env
 .DS_STORE
+.pytest_cache

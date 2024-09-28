@@ -30,7 +30,6 @@ app.include_router(router)
 @app.get("/")
 def read_root():
     try:
-        return {"Hello": {"test": "world"}}
-
+        return {"msg": "Hello World"}
     except Exception as e:
         return HTTPException(status_code=500, detail=str(e))

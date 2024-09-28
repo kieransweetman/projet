@@ -4,3 +4,5 @@ pymysql==1.1.1
 pydantic==2.0.3
 pymongo
 python-dotenv
+httpx
+pytest
