@@ -1,31 +1,40 @@
 version: '3'
 services:
   
-  school-api:
-      build: 
-        context: ./app
-        dockerfile: Dockerfile
-      container_name: school-api
-      volumes:
-        - ./app:/app
-      ports:
-        - "8000:8000"
-      depends_on:
-        mongodb:
-          condition: service_healthy
+  api:
+    build: 
+      context: ./app
+      dockerfile: Dockerfile
+    image: digi-school/api:latest
+    container_name: api
+    volumes:
+      - ./app:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=${MONGODB_INITDB_ROOT_USERNAME}
+      - MONGODB_INITDB_ROOT_PASSWORD=${MONGODB_INITDB_ROOT_PASSWORD}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - mongoDbTp
 
   mongodb:
     build:
       context: ./db
       dockerfile: Dockerfile
-    image: mongodb/mongodb-community-server:6.0-ubi8
+    image: digi-school/mongodb:latest
+    container_name: mongodb
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGODB_INITDB_ROOT_USERNAME=${MONGODB_INITDB_ROOT_USERNAME}
+      - MONGODB_INITDB_ROOT_PASSWORD=${MONGODB_INITDB_ROOT_PASSWORD}
     volumes:
-      - ./db/data:/data/db
+      - ./data/db:/data/db
     networks:
       - mongoDbTp
+    ports:
+      - "27017:27017"
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
 
@@ -35,4 +44,5 @@ networks:
 
 volumes:
   mongodb-data:
+    
 
