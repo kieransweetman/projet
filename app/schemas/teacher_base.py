@@ -4,7 +4,7 @@ from utils.types import PyObjectId
 from datetime import datetime
 
 
-class StudentBase(BaseModel):
+class TeacherBase(BaseModel):
     id: Optional[PyObjectId] = Field(alias="_id", default=None)
     nom: str = Field(..., title="Nom de l'élève")
     prenom: str = Field(..., title="Prénom de l'élève")
@@ -27,30 +27,13 @@ class StudentBase(BaseModel):
     )
 
 
-class StudentCreate(StudentBase):
+class TeacherCreate(TeacherBase):
     pass
 
 
-class StudentUpdate(BaseModel):
+class TeacherUpdate(BaseModel):
     nom: Optional[str]
     prenom: Optional[str]
     date_naissance: Optional[int]
     sexe: Optional[str]
-    classe: Optional[str]
     adresse: Optional[str]
-
-
-# class Student(StudentBase):
-#     model_config = ConfigDict(
-#         populate_by_name=True,
-#         arbitrary_types_allowed=True,
-#         json_schema_extra={
-#             "example": {
-#                 "nom": "Doe",
-#                 "prenom": "John",
-#                 "email": "jdoe@example.com",
-#                 "age": 20,
-#                 "adesse": "123 rue sesame",
-#             }
-#         },
-#     )
