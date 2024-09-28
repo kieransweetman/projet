@@ -1,6 +1,7 @@
 import os
 from pymongo import MongoClient
 from pymongo.database import Database as PyMongoDatabase
+from utils.csv_parser import main as csv_parser
 
 
 class Database:
@@ -43,9 +44,12 @@ class Database:
         db = Database._instance.db
         collections = ["student", "teacher", "class", "subject", "grade", "trimester"]
 
+        for collection in collections:
+            if db[collection].count_documents({}) > 0:
+                print("Database is already populated.")
+                return
+
         existing_collections = db.list_collection_names()
         for collection in collections:
             if collection not in existing_collections:
                 db.create_collection(collection)
-
-        ## finish importing csv files in /csv

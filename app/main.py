@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, APIRouter, HTTPException
 from config.database import Database
 from routes import student
+from utils.csv_parser import main as csv_parser
 
 
 # Load environment variables from .env file
@@ -15,6 +16,10 @@ router = APIRouter()
 # Create a connection to the database
 try:
     db = Database().get_db()
+
+    # launch csv script
+    csv_parser()
+
 except Exception as e:
     raise HTTPException(status_code=500, detail=f"Could not connect to MongoDB: {e}")
 

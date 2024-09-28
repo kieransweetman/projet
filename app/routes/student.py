@@ -1,11 +1,10 @@
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException
-
+from fastapi import APIRouter, Depends, HTTPException, Body, status
 
 from config.database import Database
 from pymongo.database import Database as PyMongoDatabase
 
-from schemas.student_base import StudentCreate, Student
+from schemas.student_base import StudentCreate, StudentBase
 
 
 router = APIRouter(prefix="/students", tags=["students"])
@@ -21,13 +20,22 @@ def get_students(db: PyMongoDatabase = Depends(Database.get_db)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post("/", response_model=Student, response_description="Create a new student")
+@router.post(
+    "/",
+    response_model=StudentBase,
+    response_description="Create a new student",
+    status_code=status.HTTP_201_CREATED,
+)
 def create_student(
-    student: StudentCreate, db: PyMongoDatabase = Depends(Database.get_db)
+    student: StudentBase = Body(...), db: PyMongoDatabase = Depends(Database.get_db)
 ):
     try:
-        student = Student(db["student"].insert_one(student))
-        return student
+        new_student = db["student"].insert_one(
+            student.model_dump(by_alias=True, exclude=["id"])
+        )
+
+        created = db["student"].find_one({"_id": new_student.inserted_id})
+        return created
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

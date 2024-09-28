@@ -1,18 +1,29 @@
-from pydantic import BaseModel, Field, BeforeValidator
-from typing import Optional, Annotated
-from bson import ObjectId
+from pydantic import BaseModel, Field, ConfigDict
+from typing import Optional
+from utils.types import PyObjectId
+from datetime import datetime
 
 
 class StudentBase(BaseModel):
+    id: Optional[PyObjectId] = Field(alias="_id", default=None)
     nom: str = Field(..., title="Nom de l'élève")
     prenom: str = Field(..., title="Prénom de l'élève")
-    age: int = Field(..., title="Age de l'élève")
+    date_naissace: datetime = Field(..., title="Age de l'élève")
     sexe: str = Field(..., title="Sexe de l'élève")
-    classe: str = Field(..., title="Classe de l'élève")
     adresse: str = Field(..., title="Adresse de l'élève")
-
-
-PyObjectId = Annotated[str, BeforeValidator(str)]
+    model_config = ConfigDict(
+        arbitrary_types_allowed=True,
+        json_schema_extra={
+            "example": {
+                "nom": "Doe",
+                "prenom": "John",
+                "email": "jdoe@example.com",
+                "date_naissance": "2000-01-01",
+                "sexe": "M",
+                "adresse": "123 rue sesame",
+            }
+        },
+    )
 
 
 class StudentCreate(StudentBase):
@@ -22,15 +33,23 @@ class StudentCreate(StudentBase):
 class StudentUpdate(BaseModel):
     nom: Optional[str]
     prenom: Optional[str]
-    age: Optional[int]
+    date_naissance: Optional[int]
     sexe: Optional[str]
-    # classe: Optional[str]
+    classe: Optional[str]
     adresse: Optional[str]
 
 
-class Student(StudentBase):
-    id: str = Field(ObjectId, title="ID de l'élève", alias="_id")
-
-    class Config:
-        arbitrary_types_allowed = True
-        json_encoders = {ObjectId: str}
+# class Student(StudentBase):
+#     model_config = ConfigDict(
+#         populate_by_name=True,
+#         arbitrary_types_allowed=True,
+#         json_schema_extra={
+#             "example": {
+#                 "nom": "Doe",
+#                 "prenom": "John",
+#                 "email": "jdoe@example.com",
+#                 "age": 20,
+#                 "adesse": "123 rue sesame",
+#             }
+#         },
+#     )
