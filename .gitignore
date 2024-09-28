@@ -3,3 +3,5 @@ db/data/*
 .env
 .DS_STORE
 .pytest_cache
+__pycache__
+*.pyc

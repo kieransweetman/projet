@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from fastapi import FastAPI, APIRouter, HTTPException
 from config.database import Database
-from route import student
+from routes import student
 
 
 # Load environment variables from .env file
