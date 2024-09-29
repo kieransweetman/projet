@@ -43,7 +43,6 @@ def parse_subject(line, db: PyMongoDatabase = None):
 def parse_grade(line, db: PyMongoDatabase = None):
     date_saisie_string = line[1]
     date = datetime.strptime(date_saisie_string, "%Y-%m-%d %H:%M:%S.%f")
-    print(date)
     return {
         "date_saisie": date,
         "original_id": int(line[0]),
