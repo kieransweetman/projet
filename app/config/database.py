@@ -1,7 +1,12 @@
 import os
 from pymongo import MongoClient
 from pymongo.database import Database as PyMongoDatabase
-from utils.csv_parser import main as csv_parser
+from models.student import student_schema
+from models.teacher import teacher_schema
+from models.class_ import class_schema
+from models.grade import grade_schema
+from models.subject import subject_schema
+from models.trimester import trimester_schema
 
 
 class Database:
@@ -43,13 +48,31 @@ class Database:
     def init_db():
         db = Database._instance.db
         collections = ["student", "teacher", "class", "subject", "grade", "trimester"]
-
-        for collection in collections:
-            if db[collection].count_documents({}) > 0:
-                print("Database is already populated.")
-                return
+        validators = {
+            "student": student_schema,
+            "teacher": teacher_schema,
+            "class": class_schema,
+            "subject": subject_schema,
+            "grade": grade_schema,
+            "trimester": trimester_schema,
+        }
 
         existing_collections = db.list_collection_names()
         for collection in collections:
             if collection not in existing_collections:
-                db.create_collection(collection)
+                db.create_collection(collection, validator=validators[collection])
+            else:
+                Database.update_validator(collection, validators[collection])
+
+        # launch csv script
+        # only process if we haven't alredy by checking if the text file exists
+
+        from utils.csv_parser import main as csv_parser
+
+        if os.path.exists("config/processed.txt") is False:
+            csv_parser()
+
+    @staticmethod
+    def update_validator(collection_name, validator):
+        command = {"collMod": collection_name, "validator": validator}
+        Database._instance.db.command(command)
