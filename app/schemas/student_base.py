@@ -8,7 +8,7 @@ class StudentBase(BaseModel):
     id: Optional[PyObjectId] = Field(alias="_id", default=None)
     nom: str = Field(..., title="Nom de l'élève")
     prenom: str = Field(..., title="Prénom de l'élève")
-    date_naissace: datetime = Field(..., title="Age de l'élève")
+    date_naissance: datetime = Field(..., title="Age de l'élève")
     sexe: str = Field(..., title="Sexe de l'élève")
     adresse: str = Field(..., title="Adresse de l'élève")
     original_id: Optional[int] = Field(..., title="ID original de l'élève")
