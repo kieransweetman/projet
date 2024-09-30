@@ -1,9 +1,9 @@
-import os
 import csv
+import os
 from pathlib import Path
 from pymongo.database import Collection, Database as PyMongoDatabase
-from schemas.teacher_base import TeacherBase
-from schemas.student_base import StudentBase
+from schemas.teacher_base import TeacherBase, TeacherCreate
+from schemas.student_base import StudentBase, StudentCreate
 from datetime import datetime
 
 from config.database import Database
@@ -11,12 +11,15 @@ from config.database import Database
 db = Database.get_db()
 
 
-def parse_student(line):
-    date = datetime.strptime(line[4], "%Y-%m-%d %H:%M:%S.%f").isoformat(
-        timespec="seconds"
-    )
+def parse_date(date_string):
+    dt = datetime.strptime(date_string, "%Y-%m-%d %H:%M:%S.%f")
+    naive_dt = dt.replace(tzinfo=None)
+    return naive_dt.isoformat(timespec="seconds")
 
-    student = StudentBase(
+
+def parse_student(line):
+    date = parse_date(line[4])
+    student = StudentCreate(
         last_name=line[1],
         name=line[2],
         birth_date=date,
@@ -25,15 +28,13 @@ def parse_student(line):
         original_id=int(line[0]),
     )
 
-    return student.model_dump()
+    return student.model_dump(by_alias=True, exclude=["id"])
 
 
 def parse_teacher(line):
-    date = datetime.strptime(line[3], "%Y-%m-%d %H:%M:%S.%f").isoformat(
-        timespec="seconds"
-    )
+    date = parse_date(line[3])
 
-    teacher = TeacherBase(
+    teacher = TeacherCreate(
         last_name=line[1],
         name=line[2],
         birth_date=date,
@@ -42,7 +43,7 @@ def parse_teacher(line):
         original_id=int(line[0]),
     )
 
-    return teacher.model_dump()
+    return teacher.model_dump(by_alias=True, exclude=["id"])
 
 
 def parse_class(line):
@@ -59,9 +60,7 @@ def parse_subject(line):
 
 def parse_grade(line):
     date_saisie_string = line[1]
-    date = datetime.strptime(date_saisie_string, "%Y-%m-%d %H:%M:%S.%f").isoformat(
-        timespec="seconds"
-    )
+    date = parse_date(date_saisie_string)
 
     return {
         "date_saisie": date,
@@ -75,7 +74,7 @@ def parse_grade(line):
 def parse_trimester(line):
     return {
         "last_name": line[1],
-        "date": line[2],
+        "date": parse_date(line[2]),
     }
 
 

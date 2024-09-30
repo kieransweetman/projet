@@ -21,7 +21,7 @@ class PersonBase(BaseModel):
 
     @field_serializer("birth_date")
     def serialize_birth_date(self, birth_date: datetime, _info):
-        return birth_date.isoformat(timespec="seconds")
+        return birth_date.replace(tzinfo=None).isoformat(timespec="seconds")
 
     def model_dump(self, **kwargs):
         data = super().model_dump(**kwargs)

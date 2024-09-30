@@ -17,7 +17,7 @@ try:
     db = Database().get_db()
 except Exception as e:
     raise HTTPException(
-        status_code=500, detail=f"\n\###\nProblem with DB setup:\n {e}\n####"
+        status_code=500, detail=f"\n ### \nProblem with DB setup:\n {e} \n####"
     )
 
 
@@ -34,4 +34,5 @@ def read_root():
     try:
         return {"msg": "Hello World"}
     except Exception as e:
-        return HTTPException(status_code=500, detail=str(e))
+        print(r"{str(e)}")
+        return HTTPException(status_code=500, detail=r"{str(e)}")
