@@ -1,9 +1,9 @@
 schema = {"$jsonSchema": {
             "bsonType": "object",
-            "required": [ "nom", "prenom", "date_naissance", "addresse", "sexe" ],
+            "required": [ "last_name", "name", "birth_date", "address", "sex" ],
             "properties": {
                 "_id": { "bsonType": "objectId" },
-                "lastname": {
+                "last_name": {
                     "bsonType": "string",
                     "description" : "must be a string and is required"
                 },
@@ -15,7 +15,7 @@ schema = {"$jsonSchema": {
                     "bsonType": "string",
                     "description" : "must be a string and is required"
                 },
-                "adress": {
+                "address": {
                     "bsonType": "object",
                     # "required": [ "code_postal" ],
                     "properties": {
