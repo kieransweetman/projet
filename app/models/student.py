@@ -2,19 +2,19 @@ schema = {"$jsonSchema": {
             "bsonType": "object",
             "required": [ "nom", "prenom", "date_naissance", "addresse", "sexe" ],
             "properties": {
-                "nom": {
+                "lastname": {
                     "bsonType": "string",
                     "description" : "must be a string and is required"
                 },
-                "prenom": {
+                "name": {
                     "bsonType": "string",
                     "description" : "must be a string and is required"
                 },
-                "date_naissance": {
+                "birth_date": {
                     "bsonType": "string",
                     "description" : "must be a string and is required"
                 },
-                "adresse": {
+                "adress": {
                     "bsonType": "object",
                     # "required": [ "code_postal" ],
                     "properties": {
@@ -22,21 +22,34 @@ schema = {"$jsonSchema": {
                         "code_postal": { "bsonType": "string" }   
                     }
                 },
-                "sexe": {
+                "sex": {
                     "bsonType": "string",
                     "description" : "must be a string and is required"
                 },
-                "classe": {
+                "class": {
                     "bsonType": "object",
                     # "required": [ "note" ],
-                    "classe_id" : "ObjectId",
-                    "notes": [
+                    "properties": {
+                        "_id": { "bsonType": "objectId" },  
+                    },
+                    "grade": {
                         {
-                            "_id":"ObjectId",
-                            "trimestre_id":"ObjectId",
+                            "bsonType": "object",
+
+                            "properties": {
+                                "_id": { "bsonType": "objectId" },  
+                            },
+                            
+                            "trimester": {
+                                "bsonType": "object",
+
+                                "properties": {
+                                    "_id": { "bsonType": "objectId" },  
+                                }
+                            },
                             "note": "int"
                         }
-                    ]
+                    },
                 },
             },
         },

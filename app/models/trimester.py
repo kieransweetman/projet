@@ -1,10 +1,10 @@
 schema = { 
         "$jsonSchema": {
             "bsonType": "object",
-            "required": ["nom", "date"],
+            "required": ["name", "date"],
             "properties": {
-                # "_id": "ObjectId",
-                "nom": {
+                "_id": { "bsonType": "objectId" },
+                "name": {
                     "bsonType": "string",
                     "description" : "must be a string and is required" 
                 },
