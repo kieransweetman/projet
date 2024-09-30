@@ -49,12 +49,12 @@ def parse_teacher(line):
 def parse_class(line):
     teacher = db["teacher"].find_one({"original_id": int(line[2])})
     id = teacher["_id"]
-    return {"last_name": line[1], "teacher": {"_id": id}}
+    return {"name": line[1], "teacher": {"_id": id}}
 
 
 def parse_subject(line):
     return {
-        "last_name": line[1],
+        "name": line[1],
     }
 
 
@@ -73,7 +73,7 @@ def parse_grade(line):
 
 def parse_trimester(line):
     return {
-        "last_name": line[1],
+        "name": line[1],
         "date": parse_date(line[2]),
     }
 

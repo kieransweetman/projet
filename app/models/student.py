@@ -1,38 +1,46 @@
 schema = {
     "$jsonSchema": {
         "bsonType": "object",
-        "required": ["nom", "prenom", "date_naissance", "addresse", "sexe"],
+        "required": ["last_name", "name", "birth_date", "address", "sex"],
         "properties": {
             "_id": {"bsonType": "objectId"},
-            "lastname": {
+            "name": {
+                "bsonType": "string",
+                "description": "must be",
+            },
+            "last_name": {
                 "bsonType": "string",
                 "description": "must be a string and is required",
             },
-        },
-        "sex": {
-            "bsonType": "string",
-            "description": "must be a string and is required",
-        },
-        "class": {
-            "bsonType": "object",
-            # "required": [ "note" ],
-            "properties": {
-                "_id": {"bsonType": "objectId"},
+            "birth_date": {
+                "bsonType": "date",
+                "description": "must be a date and is required",
             },
-            "grade": {
-                {
-                    "bsonType": "object",
-                    "properties": {
-                        "_id": {"bsonType": "objectId"},
-                    },
-                    "trimester": {
+            "sex": {
+                "bsonType": "string",
+                "description": "must be a string and is required",
+            },
+            "address": {
+                "bsonType": "string",
+                "description": "must be a string and is required",
+            },
+            "class": {
+                "bsonType": "object",
+                "properties": {
+                    "_id": {"bsonType": "objectId"},
+                    "grade": {
                         "bsonType": "object",
                         "properties": {
                             "_id": {"bsonType": "objectId"},
+                            "trimester": {
+                                "bsonType": "object",
+                                "properties": {
+                                    "_id": {"bsonType": "objectId"},
+                                },
+                            },
                         },
                     },
-                    "note": "int",
-                }
+                },
             },
         },
     },
