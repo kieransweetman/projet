@@ -5,3 +5,4 @@ db/data/*
 .pytest_cache
 __pycache__
 *.pyc
+app/config/processed.txt
