@@ -136,7 +136,6 @@ def main():
             try:
                 for line in reader:
                     model = process(line)
-                    print(model)
                     collection.insert_one(model)
 
             except Exception as e:
