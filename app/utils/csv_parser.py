@@ -4,6 +4,9 @@ from pathlib import Path
 from pymongo.database import Collection, Database as PyMongoDatabase
 from schemas.teacher_base import TeacherBase, TeacherCreate
 from schemas.student_base import StudentBase, StudentCreate
+from schemas.class_base import ClassBase, ClassCreate
+from schemas.grade_base import GradeBase, GradeCreate
+from schemas.trimester_base import TrimesterBase, TrimesterCreate
 from datetime import datetime
 
 from config.database import Database
@@ -14,7 +17,7 @@ db = Database.get_db()
 def parse_date(date_string):
     dt = datetime.strptime(date_string, "%Y-%m-%d %H:%M:%S.%f")
     naive_dt = dt.replace(tzinfo=None)
-    return naive_dt.isoformat(timespec="seconds")
+    return naive_dt.isoformat()
 
 
 def parse_student(line):
@@ -61,8 +64,7 @@ def parse_subject(line):
 def parse_grade(line):
     date_saisie_string = line[1]
     date = parse_date(date_saisie_string)
-
-    return {
+    model = {
         "date_entered": date,
         "value": float(line[7]),
         "opinion": line[8],
@@ -70,12 +72,21 @@ def parse_grade(line):
         "original_id": int(line[0]),
     }
 
+    grade = GradeCreate(**model)
+
+    return grade.model_dump(by_alias=True, exclude=["id"])
+
 
 def parse_trimester(line):
-    return {
+
+    model = {
         "name": line[1],
         "date": parse_date(line[2]),
     }
+
+    trimester = TrimesterCreate(**model)
+
+    return trimester.model_dump(by_alias=True, exclude=["id"])
 
 
 csvs = [
@@ -119,6 +130,7 @@ def main():
             try:
                 for line in reader:
                     model = process(line)
+                    print(model)
                     collection.insert_one(model)
 
             except Exception as e:

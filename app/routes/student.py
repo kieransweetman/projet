@@ -43,12 +43,13 @@ def get_students():
 )
 def new_student(student: StudentCreate):
     try:
+        print("router Student: ", student)
         model = student.model_dump(by_alias=True)
-
+        print("router: ", model)
         new_id = collection.insert_one(model).inserted_id
+        print(new_id)
         created_student = collection.find_one({"_id": new_id})
 
-        print(created_student)
         return created_student
 
     except Exception as e:

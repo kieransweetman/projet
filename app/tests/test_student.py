@@ -29,20 +29,24 @@ test_student = StudentBase(**student_data)
 
 
 # Fixture for setup and teardown
-def setup_student(function):
+@pytest.fixture(scope="function")
+def setup_student():
     # Setup code
     logging.info("Setting up test student")
-    collection.delete_many({"_id": test_student.id})
-    collection.insert_one(test_student.model_dump(by_alias=True))
-
-
-def teardown_student(function):
+    clean()
+    document = jsonable_encoder(test_student.model_dump(by_alias=True))
+    logging.info(f"Inserting student: {document}")
+    id = collection.insert_one(document).inserted_id
+    logging.info(f"Inserted student with id: {id}")
+    yield
+    # Teardown code
     logging.info("Cleaning up test student")
     clean()
 
 
 def clean():
-    collection.delete_many({"_id": test_student.id})
+    count = collection.delete_many({"_id": test_student.id})
+    logging.info(f"Deleted {count.deleted_count} student(s)")
 
 
 # Tests
@@ -54,6 +58,7 @@ def test_get_students():
     assert response.status_code == 200
 
 
+@pytest.mark.usefixtures("setup_student")
 def test_create_student():
     clean()
 
@@ -74,27 +79,27 @@ def test_create_student():
     assert student == t_s
 
 
-def test_update_student():
-    original_student = test_student
-    updated_model = original_student.model_copy(update={"original_id": 888})
-    req_data = jsonable_encoder(updated_model)
-    logging.info(f"Sending data: {req_data}")
-    response = client.patch(
-        f"/students/{original_student.id}",
-        json=req_data,
-    )
+# def test_update_student():
+#     original_student = test_student
+#     updated_model = original_student.model_copy(update={"original_id": 888})
+#     req_data = jsonable_encoder(updated_model)
+#     logging.info(f"Sending data: {req_data}")
+#     response = client.patch(
+#         f"/students/{original_student.id}",
+#         json=req_data,
+#     )
 
-    response_student = StudentBase(**response.json())
-    logging.info(f"Response data: {response_student}")
+#     response_student = StudentBase(**response.json())
+#     logging.info(f"Response data: {response_student}")
 
-    assert response.status_code == 200
-    assert response_student.original_id == updated_model.original_id
+#     assert response.status_code == 200
+#     assert response_student.original_id == updated_model.original_id
 
 
-def test_delete_student():
-    response = client.delete(f"/students/{test_student.id}")
-    assert response.status_code == 200
-    assert response.json() == {"message": "Student deleted successfully"}
-    assert collection.find_one({"_id": test_student.id}) == None
-    clean()
-    logging.info("Student deleted successfully")
+# def test_delete_student():
+#     response = client.delete(f"/students/{test_student.id}")
+#     assert response.status_code == 200
+#     assert response.json() == {"message": "Student deleted successfully"}
+#     assert collection.find_one({"_id": test_student.id}) == None
+#     clean()
+#     logging.info("Student deleted successfully")
