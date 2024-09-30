@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from fastapi import FastAPI, APIRouter, HTTPException
 from config.database import Database
-from routes import student
+from routes import student, teacher
 
 
 # Load environment variables from .env file
@@ -23,7 +23,7 @@ except Exception as e:
 
 router.include_router(student.router)
 # TODO: Add the other router files
-# router.include_router(teacher.router)
+router.include_router(teacher.router)
 # router.include_router(class.router)
 
 app.include_router(router)

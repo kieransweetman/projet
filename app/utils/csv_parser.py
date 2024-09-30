@@ -63,10 +63,10 @@ def parse_grade(line):
     date = parse_date(date_saisie_string)
 
     return {
-        "date_saisie": date,
-        "note": float(line[7]),
-        "avis": line[8],
-        "avancement": float(line[9]),
+        "date_entered": date,
+        "value": float(line[7]),
+        "opinion": line[8],
+        "advancement": float(line[9]),
         "original_id": int(line[0]),
     }
 

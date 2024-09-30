@@ -1,5 +1,7 @@
 from pydantic import ConfigDict
 from .person_base import PersonBase, PersonCreate, PersonUpdate
+from typing import Optional, List
+from pydantic import BaseModel
 
 
 config = ConfigDict(
@@ -27,3 +29,7 @@ class TeacherCreate(PersonCreate):
 
 class TeacherUpdate(PersonUpdate):
     pass
+
+
+class TeacherCollection(BaseModel):
+    teachers: List[TeacherBase]
