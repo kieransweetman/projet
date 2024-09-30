@@ -80,8 +80,12 @@ class Database:
 
         from utils.csv_parser import main as csv_parser
 
+        print("Processing data")
         if os.path.exists("config/processed.txt") is False:
+            print("Inserting data")
             csv_parser()
+        else:
+            print("Data already processed")
 
     @staticmethod
     def update_validator(collection_name, validator):
