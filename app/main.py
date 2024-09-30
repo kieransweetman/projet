@@ -16,7 +16,9 @@ router = APIRouter()
 try:
     db = Database().get_db()
 except Exception as e:
-    raise HTTPException(status_code=500, detail=f"Could not connect to MongoDB: {e}")
+    raise HTTPException(
+        status_code=500, detail=f"\n\###\nProblem with DB setup:\n {e}\n####"
+    )
 
 
 router.include_router(student.router)
