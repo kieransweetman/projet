@@ -48,7 +48,14 @@ class Database:
     @staticmethod
     def init_db():
         db = Database._instance.db
-        collections = ["student", "teacher", "class", "subject", "grade", "trimester"]
+        collections = [
+            "student",
+            "teacher",
+            "class",
+            "subject",
+            # "grade",
+            "trimester",
+        ]
         validators = {
             # "student": student_schema,
             # "teacher": teacher_schema,
@@ -61,7 +68,10 @@ class Database:
         existing_collections = db.list_collection_names()
         for collection in collections:
             if collection not in existing_collections:
-                db.create_collection(collection, validator=validators[collection])
+                db.create_collection(
+                    collection
+                    # , validator=validators[collection]
+                )
             # else:
             #     Database.update_validator(collection, validators[collection])
 

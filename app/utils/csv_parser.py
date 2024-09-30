@@ -15,11 +15,11 @@ def parse_student(line):
     date = datetime.strptime(line[4], "%Y-%m-%d %H:%M:%S.%f")
 
     student = StudentBase(
-        nom=line[1],
-        prenom=line[2],
-        date_naissance=date,
-        adresse=line[5],
-        sexe=line[6],
+        last_name=line[1],
+        name=line[2],
+        birth_date=date,
+        address=line[5],
+        sex=line[6],
         original_id=int(line[0]),
     )
 
@@ -30,11 +30,11 @@ def parse_teacher(line):
     date = datetime.strptime(line[3], "%Y-%m-%d %H:%M:%S.%f")
 
     teacher = TeacherBase(
-        nom=line[1],
-        prenom=line[2],
-        date_naissance=date,
-        sexe=line[4],
-        adresse=line[5],
+        last_name=line[1],
+        name=line[2],
+        birth_date=date,
+        sex=line[4],
+        address=line[5],
         original_id=int(line[0]),
     )
 
@@ -44,12 +44,12 @@ def parse_teacher(line):
 def parse_class(line):
     teacher = db["teacher"].find_one({"original_id": int(line[2])})
     id = teacher["_id"]
-    return {"nom": line[1], "teacher": {"_id": id}}
+    return {"last_name": line[1], "teacher": {"_id": id}}
 
 
 def parse_subject(line):
     return {
-        "nom": line[1],
+        "last_name": line[1],
     }
 
 
@@ -67,7 +67,7 @@ def parse_grade(line):
 
 def parse_trimester(line):
     return {
-        "nom": line[1],
+        "last_name": line[1],
         "date": line[2],
     }
 
