@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Body
 
 
 from config.database import Database
@@ -38,16 +38,14 @@ def get_students():
     "/",
     response_model=StudentBase,
     response_description="Create a new student",
-    response_model_by_alias=True,
+    # response_model_by_alias=True,
     status_code=status.HTTP_201_CREATED,
 )
-def new_student(student: StudentCreate):
+def new_student(student: StudentCreate = Body(...)):
     try:
-        print("router Student: ", student)
-        model = student.model_dump(by_alias=True)
-        print("router: ", model)
+
+        model = student.model_dump(by_alias=True, exclude=["id"])
         new_id = collection.insert_one(model).inserted_id
-        print(new_id)
         created_student = collection.find_one({"_id": new_id})
 
         return created_student

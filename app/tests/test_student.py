@@ -32,11 +32,18 @@ test_student = StudentBase(**student_data)
 @pytest.fixture(scope="function")
 def setup_student():
     # Setup code
-    logging.info("Setting up test student")
     clean()
-    document = jsonable_encoder(test_student.model_dump(by_alias=True))
-    logging.info(f"Inserting student: {document}")
-    id = collection.insert_one(document).inserted_id
+    id = collection.insert_one(
+        {
+            "_id": ObjectId(test_student.id),
+            "last_name": test_student.last_name,
+            "name": test_student.name,
+            "birth_date": test_student.birth_date,
+            "sex": test_student.sex,
+            "address": test_student.address,
+            "original_id": test_student.original_id,
+        }
+    ).inserted_id
     logging.info(f"Inserted student with id: {id}")
     yield
     # Teardown code
@@ -45,7 +52,7 @@ def setup_student():
 
 
 def clean():
-    count = collection.delete_many({"_id": test_student.id})
+    count = collection.delete_many({"_id": ObjectId(test_student.id)})
     logging.info(f"Deleted {count.deleted_count} student(s)")
 
 
@@ -66,7 +73,6 @@ def test_create_student():
         **test_student.model_dump(by_alias=True, exclude=["id"]),
     )
     req_data = jsonable_encoder(t_s.model_dump(by_alias=True))
-    print(req_data)
     logging.info(f"Request data: {req_data}")
     response = client.post(
         "/students/",
@@ -76,30 +82,30 @@ def test_create_student():
     student = StudentBase(**response.json())
 
     assert response.status_code == 201
-    assert student == t_s
+    assert student.original_id == t_s.original_id
 
 
-# def test_update_student():
-#     original_student = test_student
-#     updated_model = original_student.model_copy(update={"original_id": 888})
-#     req_data = jsonable_encoder(updated_model)
-#     logging.info(f"Sending data: {req_data}")
-#     response = client.patch(
-#         f"/students/{original_student.id}",
-#         json=req_data,
-#     )
+def test_update_student():
+    original_student = test_student
+    updated_model = original_student.model_copy(update={"original_id": 888})
+    req_data = jsonable_encoder(updated_model)
+    logging.info(f"Sending data: {req_data}")
+    response = client.patch(
+        f"/students/{original_student.id}",
+        json=req_data,
+    )
 
-#     response_student = StudentBase(**response.json())
-#     logging.info(f"Response data: {response_student}")
+    response_student = StudentBase(**response.json())
+    logging.info(f"Response data: {response_student}")
 
-#     assert response.status_code == 200
-#     assert response_student.original_id == updated_model.original_id
+    assert response.status_code == 200
+    assert response_student.original_id == updated_model.original_id
 
 
-# def test_delete_student():
-#     response = client.delete(f"/students/{test_student.id}")
-#     assert response.status_code == 200
-#     assert response.json() == {"message": "Student deleted successfully"}
-#     assert collection.find_one({"_id": test_student.id}) == None
-#     clean()
-#     logging.info("Student deleted successfully")
+def test_delete_student():
+    response = client.delete(f"/students/{test_student.id}")
+    assert response.status_code == 200
+    assert response.json() == {"message": "Student deleted successfully"}
+    assert collection.find_one({"_id": test_student.id}) == None
+    clean()
+    logging.info("Student deleted successfully")

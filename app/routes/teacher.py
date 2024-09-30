@@ -44,7 +44,7 @@ def get_teachers():
 )
 def new_teacher(teacher: TeacherCreate):
     try:
-        model = teacher.model_dump(by_alias=True)
+        model = teacher.model_dump(by_alias=True, exclude=["id"])
 
         new_id = collection.insert_one(model).inserted_id
         created_teacher = collection.find_one({"_id": new_id})

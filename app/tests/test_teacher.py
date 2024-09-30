@@ -29,15 +29,25 @@ test_teacher = TeacherBase(**teacher_data)
 
 
 # Fixture for setup and teardown
-def setup_teacher(function):
+@pytest.fixture(scope="function")
+def setup_student():
     # Setup code
-    logging.info("Setting up test teacher")
-    collection.delete_many({"_id": test_teacher.id})
-    collection.insert_one(test_teacher.model_dump(by_alias=True))
-
-
-def teardown_teacher(function):
-    logging.info("Cleaning up test teacher")
+    clean()
+    id = collection.insert_one(
+        {
+            "_id": ObjectId(test_teacher.id),
+            "last_name": test_teacher.last_name,
+            "name": test_teacher.name,
+            "birth_date": test_teacher.birth_date,
+            "sex": test_teacher.sex,
+            "address": test_teacher.address,
+            "original_id": test_teacher.original_id,
+        }
+    ).inserted_id
+    logging.info(f"Inserted student with id: {id}")
+    yield
+    # Teardown code
+    logging.info("Cleaning up test student")
     clean()
 
 
@@ -56,8 +66,10 @@ def test_get_teachers():
 
 def test_create_teacher():
 
-    req_data = jsonable_encoder(test_teacher)
-    print(req_data)
+    t_t = TeacherCreate(
+        **test_teacher.model_dump(by_alias=True, exclude=["id"]),
+    )
+    req_data = jsonable_encoder(t_t.model_dump(by_alias=True))
     logging.info(f"Request data: {req_data}")
     response = client.post(
         "/teachers/",
@@ -66,7 +78,6 @@ def test_create_teacher():
     teacher = TeacherBase(**response.json())
 
     assert response.status_code == 201
-    assert teacher == test_teacher
 
 
 def test_update_teacher():

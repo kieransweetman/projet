@@ -11,7 +11,7 @@ config = ConfigDict(
             "last_name": "Doe",
             "name": "John",
             "email": "jdoe@example.com",
-            "birth_date": "2000-01-01",
+            "birth_date": "2000-01-01T00:00:00",
             "sex": "M",
             "address": "123 rue sesame",
         }
