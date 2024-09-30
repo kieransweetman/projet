@@ -1,22 +1,16 @@
 from typing import List
 from fastapi import APIRouter, HTTPException, status, Body
 
-
-from config.database import Database
-from pymongo.database import Database as PyMongoDatabase
-
 from schemas.student_base import (
     StudentCollection,
     StudentBase,
     StudentCreate,
-    StudentUpdate,
 )
 
-from utils.common import COLLECTION
+from controllers.student_controller import get_all, new
 
 
 router = APIRouter(prefix="/students", tags=["students"])
-collection = Database().get_db().get_collection(COLLECTION.STUDENT.value)
 
 
 @router.get(
@@ -24,10 +18,12 @@ collection = Database().get_db().get_collection(COLLECTION.STUDENT.value)
     response_model=StudentCollection,
     response_description="Get all students",
     response_model_by_alias=True,
+    status_code=status.HTTP_200_OK,
 )
 def get_students():
     try:
-        students = StudentCollection(students=collection.find().to_list())
+
+        students = get_all()
         return students
 
     except Exception as e:
@@ -44,9 +40,7 @@ def get_students():
 def new_student(student: StudentCreate = Body(...)):
     try:
 
-        model = student.model_dump(by_alias=True, exclude=["id"])
-        new_id = collection.insert_one(model).inserted_id
-        created_student = collection.find_one({"_id": new_id})
+        created_student = new(student)
 
         return created_student
 

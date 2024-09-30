@@ -7,6 +7,7 @@ from schemas.student_base import StudentBase, StudentCreate
 from schemas.class_base import ClassBase, ClassCreate
 from schemas.grade_base import GradeBase, GradeCreate
 from schemas.trimester_base import TrimesterBase, TrimesterCreate
+from schemas.subject_base import SubjectBase, SubjectCreate
 from datetime import datetime
 
 from config.database import Database
@@ -56,9 +57,14 @@ def parse_class(line):
 
 
 def parse_subject(line):
-    return {
+
+    model = {
         "name": line[1],
     }
+
+    subject = SubjectCreate(**model)
+
+    return subject.model_dump(by_alias=True, exclude=["id"])
 
 
 def parse_grade(line):

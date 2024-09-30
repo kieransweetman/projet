@@ -12,11 +12,10 @@ from schemas.teacher_base import (
     TeacherUpdate,
 )
 
-from utils.common import COLLECTION
+from controllers.teacher_controller import get_all, new
 
 
 router = APIRouter(prefix="/teachers", tags=["teachers"])
-collection = Database().get_db().get_collection(COLLECTION.STUDENT.value)
 
 
 @router.get(
@@ -28,7 +27,7 @@ collection = Database().get_db().get_collection(COLLECTION.STUDENT.value)
 )
 def get_teachers():
     try:
-        teachers = TeacherCollection(teachers=collection.find().to_list())
+        teachers = get_all()
         return teachers
 
     except Exception as e:
@@ -44,12 +43,7 @@ def get_teachers():
 )
 def new_teacher(teacher: TeacherCreate):
     try:
-        model = teacher.model_dump(by_alias=True, exclude=["id"])
-
-        new_id = collection.insert_one(model).inserted_id
-        created_teacher = collection.find_one({"_id": new_id})
-
-        print(created_teacher)
+        created_teacher = new(teacher)
         return created_teacher
 
     except Exception as e:
