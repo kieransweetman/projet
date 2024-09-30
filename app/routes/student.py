@@ -41,9 +41,12 @@ def delete_student(id:str, db: PyMongoDatabase = Depends(Database.get_db)):
         raise HTTPException(status_code=500, detail=str(e))
 
 # @router.patch("{id}",status_code=status.HTTP_200_OK,response_description="Update One Student")
-# def update_student(id: str, db: PyMongoDatabase = Depends(Database.get_db)):
+# def update_student(id: str, update_data: StudentBase, db: PyMongoDatabase = Depends(Database.get_db)):
 #     try:
-#         db["student"].find_one_and_update("_id" == id)
-        
+#         update_dict = update_data.model_dump(exclude_unset=True)
+#         db_student = db["student"].update_one({"_id":ObjectId(id)},update_dict.update())
+#         for field, value in update_dict.items():
+#             setattr(db_student, field, value)
+            
 #     except Exception as e:
 #         raise HTTPException(status_code=500, detail=str(e))
