@@ -14,12 +14,14 @@ config = ConfigDict(
 class EmbeddedTeacher:
     id: PyObjectId=Field(...,alias="_id")
 
+class EmbeddedStudent:
+    id: PyObjectId=Field(...,alias="_id")
 
 class ClassBase(BaseModel):
     model_config = config
     name: str
     teacher: Optional[EmbeddedTeacher]
-
+    student: Optional[EmbeddedStudent]
 
 class ClassCreate(ClassBase):
     pass
