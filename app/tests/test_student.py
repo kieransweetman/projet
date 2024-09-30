@@ -56,11 +56,13 @@ def test_get_students():
 
 def test_create_student():
     clean()
-    test_student.id = ObjectId("652f1b9b3b3b3b3b3b3b3b3b")
-    modified_test_student = test_student.model_dump(by_alias=True)
-    req_data = jsonable_encoder(modified_test_student)
+
+    t_s = StudentCreate(
+        **test_student.model_dump(by_alias=True, exclude=["id"]),
+    )
+    req_data = jsonable_encoder(t_s.model_dump(by_alias=True))
+    print(req_data)
     logging.info(f"Request data: {req_data}")
-    print(modified_test_student)
     response = client.post(
         "/students/",
         json=req_data,
@@ -69,7 +71,7 @@ def test_create_student():
     student = StudentBase(**response.json())
 
     assert response.status_code == 201
-    assert student == modified_test_student
+    assert student == t_s
 
 
 def test_update_student():
