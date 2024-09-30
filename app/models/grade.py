@@ -1,7 +1,7 @@
 schema = { 
         "$jsonSchema": {
             "bsonType": "object",
-            "required": [ "grade", "opinion", "advancement", "date_entered"],
+            "required": [ "value", "opinion", "advancement", "date_entered"],
             "properties": {
                 "_id": { "bsonType": "objectId" },
                 "student": {
@@ -32,7 +32,7 @@ schema = {
                     "bsonType": "string",
                     "description" : "must be a string and is required"
                 },
-                "grade": {
+                "value": {
                     "bsonType": "double",
                     "description" : "must be an double and is required"
                 },
