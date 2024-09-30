@@ -1,26 +1,11 @@
-schema = {
-    "$jsonSchema": {
-        "bsonType": "object",
-        "required": ["nom", "prenom", "date_naissance", "addresse", "sexe"],
-        "properties": {
-            "lastname": {
-                "bsonType": "string",
-                "description": "must be a string and is required",
-            },
-            "name": {
-                "bsonType": "string",
-                "description": "must be a string and is required",
-            },
-            "birth_date": {
-                "bsonType": "string",
-                "description": "must be a string and is required",
-            },
-            "adress": {
-                "bsonType": "object",
-                # "required": [ "code_postal" ],
-                "properties": {
-                    "street": {"bsonType": "string"},
-                    "code_postal": {"bsonType": "string"},
+schema = {"$jsonSchema": {
+            "bsonType": "object",
+            "required": [ "nom", "prenom", "date_naissance", "addresse", "sexe" ],
+            "properties": {
+                "_id": { "bsonType": "objectId" },
+                "lastname": {
+                    "bsonType": "string",
+                    "description" : "must be a string and is required"
                 },
             },
             "sex": {

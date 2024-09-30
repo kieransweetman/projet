@@ -2,6 +2,7 @@ schema = {"$jsonSchema": {
             "bsonType": "object",
             "required": [ "nom", "prenom", "date_naissance","sexe" ],
             "properties": {
+                "_id": { "bsonType": "objectId" },
                 "lastname": {
                     "bsonType": "string",
                     "description": "must be a string and is required"

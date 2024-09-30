@@ -1,30 +1,49 @@
 schema = { 
         "$jsonSchema": {
             "bsonType": "object",
-            "required": [ "note", "avis", "avancement", "date_saisie"],
+            "required": [ "value", "opinion", "advancement", "date_entered"],
             "properties": {
-                # "_id": "ObjectId",
-                "eleve_id": "ObjectId",
-                "trimestre_id": "ObjectId",
-                "classe_id": "ObjectId",
-                "matiere_id": "ObjectId",
-                "note": {
-                    "bsonType": "int",
-                    "description" : "must be an int and is required"
+                "_id": { "bsonType": "objectId" },
+                "student": {
+                    "bsonType": "object",
+                    "properties": {
+                        "_id": { "bsonType": "objectId" },  
+                    }
                 },
-                "avis": {
+                "trimester": {
+                    "bsonType": "object",
+                    "properties": {
+                        "_id": { "bsonType": "objectId" },  
+                    }
+                },
+                "class": {
+                    "bsonType": "object",
+                    "properties": {
+                        "_id": { "bsonType": "objectId" },  
+                    }
+                },
+                "subject": {
+                    "bsonType": "object",
+                    "properties": {
+                        "_id": { "bsonType": "objectId" },  
+                    }
+                },
+                "date_entered": {
                     "bsonType": "string",
                     "description" : "must be a string and is required"
                 },
-                "avancement": {
+                "value": {
+                    "bsonType": "double",
+                    "description" : "must be an double and is required"
+                },
+                "opinion": {
                     "bsonType": "string",
                     "description" : "must be a string and is required"
                 },
-                "date_saisie": {
-                    "bsonType": "string",
-                    "description" : "must be a string and is required"
+                "advancement": {
+                    "bsonType": "double",
+                    "description" : "must be a double and is required"
                 },
-                
             }
         }
     }
