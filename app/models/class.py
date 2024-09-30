@@ -15,7 +15,6 @@ schema = {
                 },
                 "student": {
                     "bsonType": "object",
-
                     "properties": {
                         "_id": { "bsonType": "objectId" },  
                     }
