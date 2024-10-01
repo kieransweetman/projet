@@ -99,7 +99,7 @@ def test_update_teacher():
 
 def test_delete_teacher():
     response = client.delete(f"/teachers/{test_teacher.id}")
-    assert response.status_code == 200
+    assert response.status_code == 204
     assert collection.find_one({"_id": test_teacher.id}) == None
     clean()
     logging.info("Teacher deleted successfully")

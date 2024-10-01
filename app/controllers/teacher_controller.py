@@ -1,3 +1,4 @@
+from bson import ObjectId
 from config.database import Database
 from utils.common import COLLECTION
 
@@ -24,3 +25,8 @@ def new(teacher: TeacherCreate) -> TeacherBase:
     created_teacher = collection.find_one({"_id": new_id})
 
     return created_teacher
+
+def get_one(id: str) -> TeacherBase:
+    teacher = collection.find_one({"_id": ObjectId(id)})
+
+    return teacher
