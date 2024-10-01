@@ -27,10 +27,14 @@ class StudentBase(PersonBase):
 
 
 class StudentCreate(PersonCreate):
+    model_config = config
+
     pass
 
 
 class StudentUpdate(PersonUpdate):
+    model_config = config
+
     last_name: Optional[str]
     name: Optional[str]
     birth_date: Optional[int]

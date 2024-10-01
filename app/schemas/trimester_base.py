@@ -32,9 +32,13 @@ class TrimesterBase(BaseModel):
 
 
 class TrimesterCreate(TrimesterBase):
+    model_config = config
+
     pass
 
 
 class TrimesterUpdate:
+    model_config = config
+
     name: Optional[str] = None
     date: Optional[datetime] = None

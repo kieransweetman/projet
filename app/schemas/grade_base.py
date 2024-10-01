@@ -3,8 +3,12 @@ from typing import Optional, List
 from utils.types import PyObjectId
 from datetime import datetime
 
+config = ConfigDict()
+
 
 class GradeBase(BaseModel):
+    model_config = config
+
     id: Optional[PyObjectId] = Field(alias="_id", default=None)
     date_entered: datetime = Field(..., title="Date of grade")
     value: float = Field(..., title="Grade value")
@@ -31,10 +35,14 @@ class GradeBase(BaseModel):
 
 
 class GradeCreate(GradeBase):
+    model_config = config
+
     pass
 
 
 class GradeUpdate(GradeBase):
+    model_config = config
+
     date_entered: Optional[datetime]
     value: Optional[float]
     # student: Optional[PyObjectId]

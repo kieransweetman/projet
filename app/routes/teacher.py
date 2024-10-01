@@ -75,7 +75,6 @@ def update_teacher(
 ):
     try:
         update_dict = update_data.model_dump(exclude_unset=True)
-        print(update_dict)
         updated = db["teacher"].update_one({"_id": ObjectId(id)}, {"$set": update_dict})
 
         teacher = get_one(id)

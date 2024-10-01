@@ -77,7 +77,7 @@ def clean():
 # Tests
 
 
-def test_get_classs():
+def test_get_class():
     response = client.get("/class/")
 
     assert response.status_code == 200
@@ -101,7 +101,7 @@ def test_create_class(set_teacher):
 def test_update_class():
     original_class = test_class
     updated_model = original_class.model_copy(update={"original_id": 888})
-    req_data = jsonable_encoder(updated_model)
+    req_data = {"name": "updated-name"}
     logging.info(f"Sending data: {req_data}")
     response = client.patch(
         f"/class/{original_class.id}",

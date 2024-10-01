@@ -3,13 +3,9 @@ from typing import Optional
 
 
 config = ConfigDict(
-    arbitrary_types_allowed=True,
-    json_schema_extra={
-        "example": {
-            "name": "Mathematics"
-        }
-    }
+    arbitrary_types_allowed=True, json_schema_extra={"example": {"name": "Mathematics"}}
 )
+
 
 class SubjectBase(BaseModel):
     model_config = config
@@ -17,8 +13,9 @@ class SubjectBase(BaseModel):
 
 
 class SubjectCreate(SubjectBase):
+    model_config = config
     pass
 
 
-class SubjectUpdate():
-    name:Optional[str] = None
+class SubjectUpdate:
+    name: Optional[str] = None

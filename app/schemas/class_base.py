@@ -27,10 +27,14 @@ class ClassBase(BaseModel):
 
 
 class ClassCreate(ClassBase):
+    model_config = config
+
     pass
 
 
 class ClassUpdate:
+    model_config = config
+
     name: Optional[str] = None
 
 

@@ -24,10 +24,12 @@ class TeacherBase(PersonBase):
 
 
 class TeacherCreate(PersonCreate):
+    model_config = config
     pass
 
 
 class TeacherUpdate(PersonUpdate):
+    model_config = config
     pass
 
 
