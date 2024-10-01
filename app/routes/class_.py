@@ -71,6 +71,8 @@ def update_class(
 ):
     try:
         update_dict = update_data.model_dump(exclude_unset=True, by_alias=True)
+
+        update_dict["teacher"]["_id"] = ObjectId(update_dict["teacher"]["_id"])
         updated = db["class"].update_one({"_id": ObjectId(id)}, {"$set": update_dict})
         class_ = get_one(id)
         return class_
