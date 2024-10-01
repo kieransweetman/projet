@@ -85,13 +85,15 @@ def test_create_student():
     assert student.original_id == t_s.original_id
 
 
+@pytest.mark.usefixtures("setup_student")
 def test_update_student():
     original_student = test_student
     updated_model = original_student.model_copy(update={"original_id": 888})
     req_data = jsonable_encoder(updated_model)
     logging.info(f"Sending data: {req_data}")
+    id = req_data["_id"]
     response = client.patch(
-        f"/students/{original_student.id}",
+        f"/students/{id}",
         json=req_data,
     )
 

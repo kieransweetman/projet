@@ -14,7 +14,7 @@ from schemas.student_base import (
     StudentCreate,
 )
 
-from controllers.student_controller import get_all, new
+from controllers.student_controller import get_all, new, get_one
 
 
 router = APIRouter(prefix="/students", tags=["students"])
@@ -62,7 +62,7 @@ def delete_student(id: str, db: PyMongoDatabase = Depends(Database.get_db)):
 
 
 @router.patch(
-    "{id}",
+    "/{id}",
     response_model=StudentBase,
     status_code=status.HTTP_200_OK,
     response_description="Update One Student",
@@ -72,9 +72,11 @@ def update_student(
 ):
     try:
         update_dict = update_data.model_dump(exclude_unset=True)
-        db_student = db["student"].update_one(
-            {"_id": ObjectId(id)}, {"$set": update_dict}
-        )
+        updated = db["student"].update_one({"_id": ObjectId(id)}, {"$set": update_dict})
+
+        student = get_one(id)
+
+        return student
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
