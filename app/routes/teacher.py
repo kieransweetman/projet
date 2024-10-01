@@ -50,6 +50,7 @@ def new_teacher(teacher: TeacherCreate):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @router.delete(
     "/{id}",
     status_code=status.HTTP_204_NO_CONTENT,
@@ -70,10 +71,11 @@ def delete_teacher(id: str, db: PyMongoDatabase = Depends(Database.get_db)):
     response_description="Update One Teacher",
 )
 def update_teacher(
-    id: str, update_data: TeacherBase, db: PyMongoDatabase = Depends(Database.get_db)
+    id: str, update_data: TeacherUpdate, db: PyMongoDatabase = Depends(Database.get_db)
 ):
     try:
         update_dict = update_data.model_dump(exclude_unset=True)
+        print(update_dict)
         updated = db["teacher"].update_one({"_id": ObjectId(id)}, {"$set": update_dict})
 
         teacher = get_one(id)

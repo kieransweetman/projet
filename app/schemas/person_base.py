@@ -25,7 +25,8 @@ class PersonBase(BaseModel):
 
     def model_dump(self, **kwargs):
         data = super().model_dump(**kwargs)
-        data["birth_date"] = self.birth_date
+        if "birth_date" in data and data["birth_date"] is not None:
+            data["birth_date"] = self.birth_date
         return data
 
 
@@ -34,9 +35,9 @@ class PersonCreate(PersonBase):
 
 
 class PersonUpdate(PersonBase):
-    last_name: Optional[str]
-    name: Optional[str]
-    birth_date: Optional[int]
-    sex: Optional[str]
-    classe: Optional[str]
-    address: Optional[str]
+    last_name: Optional[str] = None
+    name: Optional[str] = None
+    birth_date: Optional[int] = None
+    sex: Optional[str] = None
+    classe: Optional[str] = None
+    address: Optional[str] = None
