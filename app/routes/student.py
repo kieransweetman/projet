@@ -12,6 +12,8 @@ from schemas.student_base import (
     StudentCollection,
     StudentBase,
     StudentCreate,
+    EmbeddedGrade,
+    StudentUpdate,
 )
 
 from controllers.student_controller import get_all, new, get_one
@@ -48,6 +50,20 @@ def get_one_student(id: str, db: PyMongoDatabase = Depends(Database.get_db)):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.get(
+    "/{id}/grades",
+    response_model=List[EmbeddedGrade],
+    response_description="Get One Student Grades",
+)
+def get_student_grades(id: str):
+    try:
+        student = get_one(id)
+        return student.grades
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.delete(
     "/{id}",
     status_code=status.HTTP_204_NO_CONTENT,
@@ -68,7 +84,7 @@ def delete_student(id: str, db: PyMongoDatabase = Depends(Database.get_db)):
     response_description="Update One Student",
 )
 def update_student(
-    id: str, update_data: StudentBase, db: PyMongoDatabase = Depends(Database.get_db)
+    id: str, update_data: StudentUpdate, db: PyMongoDatabase = Depends(Database.get_db)
 ):
     try:
         update_dict = update_data.model_dump(exclude_unset=True)

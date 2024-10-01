@@ -32,3 +32,9 @@ def get_one(id: str) -> StudentBase:
     student = collection.find_one({"_id": ObjectId(id)})
 
     return student
+
+
+def get_grades(id: str):
+    student = StudentBase(**collection.find_one({"_id": ObjectId(id)}))
+
+    return student.grades

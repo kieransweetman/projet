@@ -6,15 +6,37 @@ from datetime import datetime
 config = ConfigDict()
 
 
+class EmbeddedStudent(BaseModel):
+    id: PyObjectId = Field(..., alias="_id")
+
+
+class EmbeddedTeacher(BaseModel):
+    id: PyObjectId = Field(..., alias="_id")
+
+
+class EmbeddedSubject(BaseModel):
+    id: PyObjectId = Field(..., alias="_id")
+
+
+class EmbeddedTrimester(BaseModel):
+    id: PyObjectId = Field(..., alias="_id")
+
+
+class EmbeddedClass(BaseModel):
+    id: PyObjectId = Field(..., alias="_id")
+
+
 class GradeBase(BaseModel):
     model_config = config
 
     id: Optional[PyObjectId] = Field(alias="_id", default=None)
     date_entered: datetime = Field(..., title="Date of grade")
+    teacher: EmbeddedTeacher = Field(..., title="Teacher id")
+    student: EmbeddedStudent = Field(..., title="Student id")
+    class_: EmbeddedClass = Field(..., alias="class", title="Class id")
+    subject: EmbeddedSubject = Field(..., title="Subject id")
+    trimester: EmbeddedTrimester = Field(..., title="Trimester id")
     value: float = Field(..., title="Grade value")
-    # student: PyObjectId = Field(..., title="Student id")
-    # class: PyObjectId = Field(..., title="Class id")
-    # subject: PyObjectId = Field(..., title="Subject id")
     advancement: float = Field(..., title="Advancement value")
     opinion: str = Field(..., title="Teacher opinion")
 

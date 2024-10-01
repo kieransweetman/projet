@@ -3,6 +3,8 @@ import pytest
 from fastapi.encoders import jsonable_encoder
 import logging
 from schemas.class_base import ClassBase, ClassCreate, ClassUpdate
+from schemas.student_base import StudentBase
+from schemas.teacher_base import TeacherBase
 from tests.test_teacher import setup_teacher
 from main import app
 from config.database import Database
@@ -29,14 +31,13 @@ test_class = ClassBase(**class_data)
 def setup_class():
     # Setup code
     clean()
-    id = collection.insert_one(
-        {
-            "_id": ObjectId(test_class.id),
-            "name": test_class.name,
-        }
-    ).inserted_id
+    model = {
+        "_id": ObjectId(test_class.id),
+        "name": test_class.name,
+    }
+    id = collection.insert_one(model).inserted_id
     logging.info(f"Inserted class with id: {id}")
-    yield
+    yield model
     # Teardown code
     logging.info("Cleaning up test class")
     clean()
@@ -63,15 +64,43 @@ def set_teacher():
     clean_teacher()
 
 
-def clean_teacher():
-    db.get_collection(COLLECTION.TEACHER.value).delete_many(
+@pytest.fixture(scope="function")
+def set_student():
+    clean_student()
+    model = {
+        "_id": ObjectId("60f1b9b3b3b3b3b3b3b3b3b3"),
+        "last_name": "Doe",
+        "name": "John",
+        "address": "123 rue de la torche",
+        "sex": "M",
+        "birth_date": datetime(2000, 1, 1),
+    }
+    try:
+        id = db.get_collection(COLLECTION.STUDENT.value).insert_one(model).inserted_id
+    except Exception as e:
+        logging.error(f"Error: {e}")
+
+    yield model
+    clean_student()
+
+
+def clean_student():
+    result = db.get_collection(COLLECTION.STUDENT.value).delete_many(
         {"_id": ObjectId("60f1b9b3b3b3b3b3b3b3b3b3")}
     )
+    logging.info(f"Deleted teacher: {result.deleted_count}")
+
+
+def clean_teacher():
+    result = db.get_collection(COLLECTION.TEACHER.value).delete_many(
+        {"_id": ObjectId("60f1b9b3b3b3b3b3b3b3b3b3")}
+    )
+    logging.info(f"Deleted teacher: {result.deleted_count}")
 
 
 def clean():
-    count = collection.delete_many({"_id": ObjectId(test_class.id)})
-    logging.info(f"Deleted {count.deleted_count} class(s)")
+    result = collection.delete_many({"_id": ObjectId(test_class.id)})
+    logging.info(f"Deleted {result.deleted_count} class(s)")
 
 
 # Tests
@@ -120,3 +149,26 @@ def test_delete_class():
     assert collection.find_one({"_id": test_class.id}) == None
     clean()
     logging.info("Class deleted successfully")
+
+
+# @pytest.mark.usefixtures("setup_class")
+# @pytest.mark.usefixtures("set_teacher")
+# @pytest.mark.usefixtures("set_student")
+# def test_add_student(setup_class, set_student, set_teacher):
+
+#     teacher = TeacherBase(**set_teacher)
+#     class_ = ClassBase(**setup_class)
+
+#     class_.teacher = teacher
+#     db.get_collection(COLLECTION.CLASS.value).update_one(
+#         {"_id": class_.id}, {"$set": class_.model_dump(by_alias=True)}
+#     )
+
+#     student = StudentBase(**set_student)
+#     req_data = [{"_id": str(student.id), "name": student.name}]
+
+#     url = f"/class/{class_.id}/add_students"
+
+#     response = client.patch(url, json=req_data)
+
+#     assert response.status_code == 201
