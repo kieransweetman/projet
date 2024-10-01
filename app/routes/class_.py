@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Body
 
 
 from config.database import Database
@@ -41,7 +41,7 @@ def get_classs():
     response_model_by_alias=True,
     status_code=status.HTTP_201_CREATED,
 )
-def new_class(class_: ClassCreate):
+def new_class(class_: ClassCreate = Body(...)):
     try:
         created_class = new(class_)
         return created_class

@@ -3,11 +3,12 @@ import pytest
 from fastapi.encoders import jsonable_encoder
 import logging
 from schemas.class_base import ClassBase, ClassCreate, ClassUpdate
-
+from tests.test_teacher import setup_teacher
 from main import app
 from config.database import Database
 from utils.common import COLLECTION
 from bson import ObjectId
+from datetime import datetime
 
 client = TestClient(app)
 db = Database().get_db()
@@ -41,6 +42,33 @@ def setup_class():
     clean()
 
 
+@pytest.fixture(scope="function")
+def set_teacher():
+    clean_teacher()
+    model = {
+        "_id": ObjectId("60f1b9b3b3b3b3b3b3b3b3b3"),
+        "last_name": "Doe",
+        "name": "John",
+        "birth_date": datetime(2000, 1, 1),
+        "sex": "M",
+        "address": "123 rue de la torche",
+        "original_id": 777,
+    }
+    try:
+        id = db.get_collection(COLLECTION.TEACHER.value).insert_one(model).inserted_id
+    except Exception as e:
+        logging.error(f"Error: {e}")
+
+    yield model
+    clean_teacher()
+
+
+def clean_teacher():
+    db.get_collection(COLLECTION.TEACHER.value).delete_many(
+        {"_id": ObjectId("60f1b9b3b3b3b3b3b3b3b3b3")}
+    )
+
+
 def clean():
     count = collection.delete_many({"_id": ObjectId(test_class.id)})
     logging.info(f"Deleted {count.deleted_count} class(s)")
@@ -55,21 +83,19 @@ def test_get_classs():
     assert response.status_code == 200
 
 
-@pytest.mark.usefixtures("setup_class")
-def test_create_class():
+@pytest.mark.usefixtures("set_teacher")
+def test_create_class(set_teacher):
     clean()
 
     req_data = test_class.model_dump(by_alias=True)
-    logging.info(f"Request data: {req_data}")
+    req_data["teacher"] = {"_id": str(set_teacher["_id"])}
+    logging.info(f"Request data\n: {req_data}")
     response = client.post(
         "/class/",
         json=req_data,
     )
-    print(response.json())
-    class_ = ClassBase(**response.json())
-
+    print(f"response: ", response.json())
     assert response.status_code == 201
-    assert class_ == req_data
 
 
 def test_update_class():

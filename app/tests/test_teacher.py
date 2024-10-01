@@ -30,29 +30,28 @@ test_teacher = TeacherBase(**teacher_data)
 
 # Fixture for setup and teardown
 @pytest.fixture(scope="function")
-def setup_student():
+def setup_teacher():
     # Setup code
     clean()
-    id = collection.insert_one(
-        {
-            "_id": ObjectId(test_teacher.id),
-            "last_name": test_teacher.last_name,
-            "name": test_teacher.name,
-            "birth_date": test_teacher.birth_date,
-            "sex": test_teacher.sex,
-            "address": test_teacher.address,
-            "original_id": test_teacher.original_id,
-        }
-    ).inserted_id
+    model = {
+        "_id": ObjectId(test_teacher.id),
+        "last_name": test_teacher.last_name,
+        "name": test_teacher.name,
+        "birth_date": test_teacher.birth_date,
+        "sex": test_teacher.sex,
+        "address": test_teacher.address,
+        "original_id": test_teacher.original_id,
+    }
+    id = collection.insert_one(model).inserted_id
     logging.info(f"Inserted student with id: {id}")
-    yield
+    yield model
     # Teardown code
     logging.info("Cleaning up test student")
     clean()
 
 
 def clean():
-    collection.delete_one({"_id": test_teacher.id})
+    collection.delete_many({"_id": test_teacher.id})
 
 
 # Tests

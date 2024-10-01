@@ -3,7 +3,10 @@ from typing import Optional
 from utils.types import PyObjectId
 
 config = ConfigDict(
-    arbitrary_types_allowed=True, json_schema_extra={"example": {"name": "Class name"}}
+    arbitrary_types_allowed=True,
+    json_schema_extra={
+        "example": {"name": "Class name", "teacher": {"_id": "ObjectId"}}
+    },
 )
 
 
