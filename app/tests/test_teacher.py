@@ -80,21 +80,21 @@ def test_create_teacher():
 
 
 @pytest.mark.usefixtures("setup_teacher")
-def test_update_teacher():
-    original_teacher = test_teacher
-    updated_model = original_teacher.model_copy(update={"original_id": 888})
-    req_data = jsonable_encoder(updated_model)
+def test_update_teacher(setup_teacher):
+    req_data = {"original_id": 888, "name": "joe", "last_name": "biden"}
+    id = setup_teacher["_id"]
     logging.info(f"Sending data: {req_data}")
     response = client.patch(
-        f"/teachers/{original_teacher.id}",
+        f"/teachers/{id}",
         json=req_data,
     )
 
+    logging.info("json\n", response.json())
     response_teacher = TeacherBase(**response.json())
     logging.info(f"Response data: {response_teacher}")
 
     assert response.status_code == 200
-    assert response_teacher.original_id == updated_model.original_id
+    assert response_teacher.original_id == 888
 
 
 def test_delete_teacher():
