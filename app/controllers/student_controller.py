@@ -1,6 +1,8 @@
 from config.database import Database
 from utils.common import COLLECTION
 
+from bson import ObjectId
+
 from schemas.student_base import (
     StudentCollection,
     StudentBase,
@@ -24,3 +26,9 @@ def new(student: StudentCreate) -> StudentBase:
     created_student = collection.find_one({"_id": new_id})
 
     return created_student
+
+
+def get_one(id: str) -> StudentBase:
+    student = collection.find_one({"_id": ObjectId(id)})
+
+    return student
