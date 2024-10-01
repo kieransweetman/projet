@@ -2,12 +2,12 @@ import os
 from pymongo import MongoClient
 from pymongo.database import Database as PyMongoDatabase
 
-# from models.student import student_schema
-# from models.teacher import teacher_schema
-# from models.class_ import class_schema
-# from models.grade import grade_schema
-# from models.subject import subject_schema
-# from models.trimester import trimester_schema
+from models.student import schema as student_schema
+from models.teacher import schema as teacher_schema
+from models.class_ import schema as class_schema
+from models.grade import schema as grade_schema
+from models.subject import schema as subject_schema
+from models.trimester import schema as trimester_schema
 
 
 class Database:
@@ -57,31 +57,32 @@ class Database:
             "trimester",
         ]
         validators = {
-            # "student": student_schema,
-            # "teacher": teacher_schema,
-            # "class": class_schema,
-            # "subject": subject_schema,
+            "student": student_schema,
+            "teacher": teacher_schema,
+            "class": class_schema,
+            "subject": subject_schema,
             # "grade": grade_schema,
-            # "trimester": trimester_schema,
+            "trimester": trimester_schema,
         }
 
         existing_collections = db.list_collection_names()
         for collection in collections:
             if collection not in existing_collections:
-                db.create_collection(
-                    collection
-                    # , validator=validators[collection]
-                )
-            # else:
-            #     Database.update_validator(collection, validators[collection])
+                db.create_collection(collection, validator=validators[collection])
+            else:
+                Database.update_validator(collection, validators[collection])
 
         # launch csv script
         # only process if we haven't alredy by checking if the text file exists
 
         from utils.csv_parser import main as csv_parser
 
+        print("Processing data")
         if os.path.exists("config/processed.txt") is False:
+            print("Inserting data")
             csv_parser()
+        else:
+            print("Data already processed")
 
     @staticmethod
     def update_validator(collection_name, validator):

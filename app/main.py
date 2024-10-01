@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from fastapi import FastAPI, APIRouter, HTTPException
 from config.database import Database
-from routes import student
+from routes import student, teacher, class_
 
 
 # Load environment variables from .env file
@@ -17,14 +17,14 @@ try:
     db = Database().get_db()
 except Exception as e:
     raise HTTPException(
-        status_code=500, detail=f"\n\###\nProblem with DB setup:\n {e}\n####"
+        status_code=500, detail=f"\n ### \nProblem with DB setup:\n {e} \n####"
     )
 
 
 router.include_router(student.router)
 # TODO: Add the other router files
-# router.include_router(teacher.router)
-# router.include_router(class.router)
+router.include_router(teacher.router)
+router.include_router(class_.router)
 
 app.include_router(router)
 
@@ -34,4 +34,5 @@ def read_root():
     try:
         return {"msg": "Hello World"}
     except Exception as e:
-        return HTTPException(status_code=500, detail=str(e))
+        print(r"{str(e)}")
+        return HTTPException(status_code=500, detail=r"{str(e)}")

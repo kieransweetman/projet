@@ -1,9 +1,13 @@
-import os
 import csv
+import os
+from pathlib import Path
 from pymongo.database import Collection, Database as PyMongoDatabase
-from bson import ObjectId
-from schemas.teacher_base import TeacherBase
-from schemas.student_base import StudentBase
+from schemas.teacher_base import TeacherBase, TeacherCreate
+from schemas.student_base import StudentBase, StudentCreate
+from schemas.class_base import ClassBase, ClassCreate
+from schemas.grade_base import GradeBase, GradeCreate
+from schemas.trimester_base import TrimesterBase, TrimesterCreate
+from schemas.subject_base import SubjectBase, SubjectCreate
 from datetime import datetime
 
 from config.database import Database
@@ -11,10 +15,15 @@ from config.database import Database
 db = Database.get_db()
 
 
-def parse_student(line):
-    date = datetime.strptime(line[4], "%Y-%m-%d %H:%M:%S.%f")
+def parse_date(date_string):
+    dt = datetime.strptime(date_string, "%Y-%m-%d %H:%M:%S.%f")
+    naive_dt = dt.replace(tzinfo=None)
+    return naive_dt.isoformat()
 
-    student = StudentBase(
+
+def parse_student(line):
+    date = parse_date(line[4])
+    student = StudentCreate(
         last_name=line[1],
         name=line[2],
         birth_date=date,
@@ -23,13 +32,13 @@ def parse_student(line):
         original_id=int(line[0]),
     )
 
-    return student.model_dump()
+    return student.model_dump(by_alias=True, exclude=["id"])
 
 
 def parse_teacher(line):
-    date = datetime.strptime(line[3], "%Y-%m-%d %H:%M:%S.%f")
+    date = parse_date(line[3])
 
-    teacher = TeacherBase(
+    teacher = TeacherCreate(
         last_name=line[1],
         name=line[2],
         birth_date=date,
@@ -38,38 +47,52 @@ def parse_teacher(line):
         original_id=int(line[0]),
     )
 
-    return teacher.model_dump()
+    return teacher.model_dump(by_alias=True, exclude=["id"])
 
 
 def parse_class(line):
     teacher = db["teacher"].find_one({"original_id": int(line[2])})
     id = teacher["_id"]
-    return {"last_name": line[1], "teacher": {"_id": id}}
+    return {"name": line[1], "teacher": {"_id": id}}
 
 
 def parse_subject(line):
-    return {
-        "last_name": line[1],
+
+    model = {
+        "name": line[1],
     }
+
+    subject = SubjectCreate(**model)
+
+    return subject.model_dump(by_alias=True, exclude=["id"])
 
 
 def parse_grade(line):
     date_saisie_string = line[1]
-    date = datetime.strptime(date_saisie_string, "%Y-%m-%d %H:%M:%S.%f")
-    return {
-        "date_saisie": date,
-        "note": float(line[7]),
-        "avis": line[8],
-        "avancement": float(line[9]),
+    date = parse_date(date_saisie_string)
+    model = {
+        "date_entered": date,
+        "value": float(line[7]),
+        "opinion": line[8],
+        "advancement": float(line[9]),
         "original_id": int(line[0]),
     }
 
+    grade = GradeCreate(**model)
+
+    return grade.model_dump(by_alias=True, exclude=["id"])
+
 
 def parse_trimester(line):
-    return {
-        "last_name": line[1],
-        "date": line[2],
+
+    model = {
+        "name": line[1],
+        "date": parse_date(line[2]),
     }
+
+    trimester = TrimesterCreate(**model)
+
+    return trimester.model_dump(by_alias=True, exclude=["id"])
 
 
 csvs = [
@@ -119,5 +142,5 @@ def main():
                 raise RuntimeError(f"Error while parsing {file_name}: {e}")
 
     # create a file to indicate that we have processed the csv files
-    with open(os.path.join(csv_dir, "../", "processed.txt"), "a") as f:
-        f.write(f"{True}")
+    processed_flag = Path(csv_dir).parent / "processed.txt"
+    processed_flag.touch()

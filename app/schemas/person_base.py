@@ -16,12 +16,12 @@ class PersonBase(BaseModel):
     @field_validator("birth_date", mode="before")
     def parse_birth_date(cls, value):
         if isinstance(value, str):
-            return datetime.fromisoformat(value)
+            return datetime.fromisoformat(value).replace(tzinfo=None)
         return value
 
     @field_serializer("birth_date")
     def serialize_birth_date(self, birth_date: datetime, _info):
-        return birth_date.isoformat(timespec="seconds")
+        return birth_date.replace(tzinfo=None).isoformat()
 
     def model_dump(self, **kwargs):
         data = super().model_dump(**kwargs)
