@@ -14,7 +14,7 @@ from schemas.class_base import (
     EmbeddedStudent,
 )
 
-from controllers.class_controller import get_all, new, add_student, get_students
+from controllers.class_controller import get_all, get_one, new, add_student, get_students
 
 
 router = APIRouter(prefix="/class", tags=["class"])
