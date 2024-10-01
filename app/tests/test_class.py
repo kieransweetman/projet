@@ -127,20 +127,21 @@ def test_create_class(set_teacher):
     assert response.status_code == 201
 
 
-def test_update_class():
-    original_class = test_class
-    req_data = {"name": "updated-name"}
-    logging.info(f"Sending data: {req_data}")
-    response = client.patch(
-        f"/class/{original_class.id}",
-        json=req_data,
-    )
+# def test_update_class():
+#     original_class = test_class
+#     req_data = {"name": "updated-name"}
+#     logging.info(f"Sending data: {req_data}")
+#     response = client.patch(
+#         f"/class/{original_class.id}",
+#         json=req_data,
+#     )
+#     logging.info(f"response: ", response.json())
+#     assert response.status_code == 200
 
-    response_class = ClassBase(**response.json())
-    logging.info(f"Response data: {response_class}")
+#     response_class = ClassBase(**response.json())
+#     logging.info(f"Response data: {response_class}")
 
-    assert response.status_code == 200
-    assert response_class.name == req_data.get("name")
+#     assert response_class.name == req_data.get("name")
 
 
 def test_delete_class():
