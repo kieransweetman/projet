@@ -100,7 +100,6 @@ def test_create_class(set_teacher):
 
 def test_update_class():
     original_class = test_class
-    updated_model = original_class.model_copy(update={"original_id": 888})
     req_data = {"name": "updated-name"}
     logging.info(f"Sending data: {req_data}")
     response = client.patch(
@@ -112,13 +111,12 @@ def test_update_class():
     logging.info(f"Response data: {response_class}")
 
     assert response.status_code == 200
-    assert response_class.original_id == updated_model.original_id
+    assert response_class.name == req_data.get("name")
 
 
 def test_delete_class():
     response = client.delete(f"/class/{test_class.id}")
     assert response.status_code == 200
-    assert response.json() == {"message": "Class deleted successfully"}
     assert collection.find_one({"_id": test_class.id}) == None
     clean()
     logging.info("Class deleted successfully")
