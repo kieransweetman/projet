@@ -79,6 +79,7 @@ def test_create_teacher():
     assert response.status_code == 201
 
 
+@pytest.mark.usefixtures("setup_teacher")
 def test_update_teacher():
     original_teacher = test_teacher
     updated_model = original_teacher.model_copy(update={"original_id": 888})
