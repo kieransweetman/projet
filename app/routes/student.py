@@ -114,3 +114,7 @@ def new_student(student: StudentCreate = Body(...)):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+## TODO
+## get all grades for student

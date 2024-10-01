@@ -44,7 +44,7 @@ class EmbeddedGrade(BaseModel):
 
 class StudentBase(PersonBase):
     model_config = config
-    grades: Optional[List[EmbeddedGrade]] = None
+    grades: Optional[List[EmbeddedGrade]] = []
     pass
 
 
