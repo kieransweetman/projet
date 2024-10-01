@@ -9,7 +9,7 @@ from schemas.grade_base import GradeBase, GradeCreate
 from schemas.trimester_base import TrimesterBase, TrimesterCreate
 from schemas.subject_base import SubjectBase, SubjectCreate
 from datetime import datetime
-
+from bson import ObjectId
 from config.database import Database
 
 db = Database.get_db()
@@ -51,9 +51,14 @@ def parse_teacher(line):
 
 
 def parse_class(line):
-    teacher = db["teacher"].find_one({"original_id": int(line[2])})
-    id = teacher["_id"]
-    return {"name": line[1], "teacher": {"_id": id}}
+
+    teacher = TeacherBase(**db["teacher"].find_one({"original_id": int(line[2])}))
+
+    class_ = ClassCreate(
+        name=line[1], teacher={"_id": teacher.id}, students=[]
+    ).model_dump(by_alias=True, exclude=["id"])
+    class_["teacher"]["_id"] = ObjectId(class_["teacher"]["_id"])
+    return class_
 
 
 def parse_subject(line):
