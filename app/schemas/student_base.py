@@ -16,13 +16,35 @@ config = ConfigDict(
             "birth_date": "2000-01-01T00:00:00",
             "sex": "M",
             "address": "123 rue sesame",
+            "grades": [
+                {
+                    "subject": "math",
+                    "value": "A",
+                    "trimester": {
+                        "name": "first",
+                    },
+                },
+            ],
         }
     },
 )
 
 
+class EmbbededTrimester(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    name: str = Field(...)
+
+
+class EmbeddedGrade(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    subject: str = Field(...)
+    value: float = Field(...)
+    trimester: EmbbededTrimester = Field(..., title="trimester")
+
+
 class StudentBase(PersonBase):
     model_config = config
+    grades: Optional[List[EmbeddedGrade]] = None
     pass
 
 
@@ -35,12 +57,13 @@ class StudentCreate(PersonCreate):
 class StudentUpdate(PersonUpdate):
     model_config = config
 
-    last_name: Optional[str]
-    name: Optional[str]
-    birth_date: Optional[int]
-    sex: Optional[str]
-    classe: Optional[str]
-    address: Optional[str]
+    last_name: Optional[str] = None
+    name: Optional[str] = None
+    birth_date: Optional[int] = None
+    sex: Optional[str] = None
+    classe: Optional[str] = None
+    address: Optional[str] = None
+    grades: Optional[List[EmbeddedGrade]] = None
 
 
 class StudentCollection(BaseModel):

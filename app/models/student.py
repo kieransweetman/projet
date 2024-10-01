@@ -24,19 +24,19 @@ schema = {
                 "bsonType": "string",
                 "description": "must be a string and is required",
             },
-            "class": {
-                "bsonType": "object",
-                "properties": {
-                    "_id": {"bsonType": "objectId"},
-                    "grade": {
-                        "bsonType": "object",
-                        "properties": {
-                            "_id": {"bsonType": "objectId"},
-                            "trimester": {
-                                "bsonType": "object",
-                                "properties": {
-                                    "_id": {"bsonType": "objectId"},
-                                },
+            "grades": {
+                "bsonType": "array",
+                "items": {
+                    "bsonType": "object",
+                    "properties": {
+                        "_id": {"bsonType": "objectId"},
+                        "subject": {"bsonType": "string"},
+                        "value": {"bsonType": "double"},
+                        "trimester": {
+                            "bsonType": "object",
+                            "properties": {
+                                "_id": {"bsonType": "objectId"},
+                                "name": {"bsonType": "string"},
                             },
                         },
                     },
