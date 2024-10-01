@@ -29,6 +29,7 @@ class ClassBase(BaseModel):
     name: str = Field(..., title="class name")
     teacher: Optional[EmbeddedTeacher] = Field(title="teacher", default=None)
     students: Optional[List[EmbeddedStudent]] = Field(title="student", default=[])
+    original_id: Optional[int] = Field(title="original id", default=None)
 
 
 class ClassCreate(ClassBase):

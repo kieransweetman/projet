@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from pydantic import ConfigDict
 from datetime import datetime
 from pydantic import BaseModel, Field, ConfigDict, field_serializer, field_validator
+from utils.types import PyObjectId
 
 config = ConfigDict(
     arbitrary_types_allowed=True,
@@ -12,8 +13,10 @@ config = ConfigDict(
 
 class TrimesterBase(BaseModel):
     model_config = config
+    id: PyObjectId = Field(default=None, alias="_id")
     name: str = Field(..., title="trimester name")
     date: datetime = Field(..., title="trimester date")
+    original_id: Optional[int] = Field(title="original id", default=None)
 
     @field_validator("date", mode="before")
     def parse_date(cls, value):

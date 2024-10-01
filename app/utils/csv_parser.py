@@ -55,7 +55,7 @@ def parse_class(line):
     teacher = TeacherBase(**db["teacher"].find_one({"original_id": int(line[2])}))
 
     class_ = ClassCreate(
-        name=line[1], teacher={"_id": teacher.id}, students=[]
+        name=line[1], original_id=line[0], teacher={"_id": teacher.id}, students=[]
     ).model_dump(by_alias=True, exclude=["id"])
     class_["teacher"]["_id"] = ObjectId(class_["teacher"]["_id"])
     return class_
@@ -65,6 +65,7 @@ def parse_subject(line):
 
     model = {
         "name": line[1],
+        "original_id": int(line[0]),
     }
 
     subject = SubjectCreate(**model)
@@ -75,15 +76,39 @@ def parse_subject(line):
 def parse_grade(line):
     date_saisie_string = line[1]
     date = parse_date(date_saisie_string)
+
+    student_data = db["student"].find_one({"original_id": int(line[2])})
+    student = StudentBase(**student_data)
+
+    class_data = db["class"].find_one({"original_id": int(line[3])})
+    class_ = ClassBase(**class_data)
+
+    subject_data = db["subject"].find_one({"original_id": int(line[4])})
+    subject = SubjectBase(**subject_data)
+
+    teacher_data = db["teacher"].find_one({"original_id": int(line[5])})
+    teacher = TeacherBase(**teacher_data)
+
+    d = db["trimester"].find().to_list()
+    trimester_data = db["trimester"].find_one({"original_id": int(line[6])})
+    trimester = TrimesterBase(**trimester_data)
+
     model = {
         "date_entered": date,
         "value": float(line[7]),
+        "class": {"_id": class_.id},
+        "student": {"_id": student.id},
+        "subject": {"_id": subject.id},
+        "teacher": {"_id": teacher.id},
+        "trimester": {"_id": trimester.id},
         "opinion": line[8],
         "advancement": float(line[9]),
         "original_id": int(line[0]),
     }
 
     grade = GradeCreate(**model)
+
+    print(grade)
 
     return grade.model_dump(by_alias=True, exclude=["id"])
 
@@ -93,6 +118,7 @@ def parse_trimester(line):
     model = {
         "name": line[1],
         "date": parse_date(line[2]),
+        "original_id": int(line[0]),
     }
 
     trimester = TrimesterCreate(**model)
@@ -101,11 +127,11 @@ def parse_trimester(line):
 
 
 csvs = [
+    {"name": "subject.csv", "process": parse_subject},
+    {"name": "trimester.csv", "process": parse_trimester},
     {"name": "teacher.csv", "process": parse_teacher},
     {"name": "student.csv", "process": parse_student},
     {"name": "class.csv", "process": parse_class},
-    {"name": "subject.csv", "process": parse_subject},
-    {"name": "trimester.csv", "process": parse_trimester},
     {"name": "grade.csv", "process": parse_grade},
 ]
 
