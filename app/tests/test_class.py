@@ -116,7 +116,7 @@ def test_update_class():
 
 def test_delete_class():
     response = client.delete(f"/class/{test_class.id}")
-    assert response.status_code == 200
+    assert response.status_code == 204
     assert collection.find_one({"_id": test_class.id}) == None
     clean()
     logging.info("Class deleted successfully")

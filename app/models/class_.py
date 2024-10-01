@@ -14,12 +14,12 @@ schema = {
                     "_id": {"bsonType": "objectId"},
                 },
             },
-            # "student": {
-            #     "bsonType": "object",
-            #     "properties": {
-            #         "_id": {"bsonType": "objectId"},
-            #     },
-            # },
+            "student": {
+                "bsonType": "object",
+                "properties": {
+                    "_id": {"bsonType": "objectId"},
+                },
+            },
         },
     }
 }

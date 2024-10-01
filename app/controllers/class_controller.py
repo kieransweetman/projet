@@ -6,6 +6,7 @@ from schemas.class_base import (
     ClassCollection,
     ClassBase,
     ClassCreate,
+    ClassUpdate,
 )
 
 
@@ -26,3 +27,9 @@ def new(class_: ClassCreate) -> ClassBase:
     created_class = collection.find_one({"_id": new_id})
 
     return created_class
+
+def get_one(id: str) -> ClassBase:
+    class_ = collection.find_one({"_id": ObjectId(id)})
+    # teacher = collection.find_one({"_id": ObjectId(class_.teacher.id)})
+    
+    return class_
