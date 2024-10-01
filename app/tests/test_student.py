@@ -106,8 +106,7 @@ def test_update_student():
 
 def test_delete_student():
     response = client.delete(f"/students/{test_student.id}")
-    assert response.status_code == 200
-    assert response.json() == {"message": "Student deleted successfully"}
+    assert response.status_code == 204
     assert collection.find_one({"_id": test_student.id}) == None
     clean()
     logging.info("Student deleted successfully")
