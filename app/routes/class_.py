@@ -14,7 +14,13 @@ from schemas.class_base import (
     EmbeddedStudent,
 )
 
-from controllers.class_controller import get_all, new, add_student, get_students
+from controllers.class_controller import (
+    get_all,
+    new,
+    add_student,
+    get_students,
+    get_one,
+)
 
 
 router = APIRouter(prefix="/class", tags=["class"])
@@ -72,8 +78,10 @@ def update_class(
 ):
     try:
         update_dict = update_data.model_dump(exclude_unset=True, by_alias=True)
+        print(update_dict)
+        if "teacher" in update_dict:
+            update_dict["teacher"]["_id"] = ObjectId(update_dict["teacher"]["_id"])
 
-        update_dict["teacher"]["_id"] = ObjectId(update_dict["teacher"]["_id"])
         updated = db["class"].update_one({"_id": ObjectId(id)}, {"$set": update_dict})
         class_ = get_one(id)
         return class_
