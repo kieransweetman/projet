@@ -88,12 +88,10 @@ def test_create_student():
 @pytest.mark.usefixtures("setup_student")
 def test_update_student():
     original_student = test_student
-    updated_model = original_student.model_copy(update={"original_id": 888})
-    req_data = jsonable_encoder(updated_model)
+    req_data = {"original_id": 888}
     logging.info(f"Sending data: {req_data}")
-    id = req_data["_id"]
     response = client.patch(
-        f"/students/{id}",
+        f"/students/{test_student.id}",
         json=req_data,
     )
 
@@ -101,7 +99,7 @@ def test_update_student():
     logging.info(f"Response data: {response_student}")
 
     assert response.status_code == 200
-    assert response_student.original_id == updated_model.original_id
+    assert response_student.original_id == req_data["original_id"]
 
 
 def test_delete_student():
