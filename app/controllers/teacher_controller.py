@@ -10,7 +10,8 @@ from schemas.teacher_base import (
 
 
 db = Database().get_db()
-collection = Database().get_db().get_collection(COLLECTION.TEACHER.value)
+collection = db.get_collection(COLLECTION.TEACHER.value)
+class_collection = db.get_collection(COLLECTION.CLASS.value)
 
 
 def get_all() -> TeacherCollection:
@@ -26,7 +27,14 @@ def new(teacher: TeacherCreate) -> TeacherBase:
 
     return created_teacher
 
+
 def get_one(id: str) -> TeacherBase:
     teacher = collection.find_one({"_id": ObjectId(id)})
 
     return teacher
+
+
+def teachers_students(teacher_id: str):
+    classes = class_collection.find({"teacher._id": ObjectId(teacher_id)}).to_list()
+    students = [s for c in classes for s in c["students"]]
+    return students

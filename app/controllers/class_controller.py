@@ -57,5 +57,4 @@ def get_one(id: str):
 
 def get_students(class_id: str):
     class_ = ClassBase(**get_one(class_id))
-    print(class_)
     return class_.students

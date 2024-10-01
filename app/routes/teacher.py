@@ -13,7 +13,11 @@ from schemas.teacher_base import (
     TeacherUpdate,
 )
 
-from controllers.teacher_controller import get_all, get_one, new
+from schemas.class_base import EmbeddedStudent
+
+from schemas.student_base import StudentBase
+
+from controllers.teacher_controller import get_all, get_one, new, teachers_students
 
 
 router = APIRouter(prefix="/teachers", tags=["teachers"])
@@ -87,3 +91,20 @@ def update_teacher(
 
 ## TODO
 ## list students & their grades
+
+
+@router.get(
+    "/{id}/students",
+    response_model=List[EmbeddedStudent],
+    status_code=status.HTTP_200_OK,
+    response_description="Get all students of a teacher with grades",
+)
+def get_students(id: str):
+    try:
+        students = teachers_students(id)
+        print(students)
+
+        return students
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
