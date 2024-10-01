@@ -70,7 +70,7 @@ def update_class(
     db: PyMongoDatabase = Depends(Database.get_db),
 ):
     try:
-        update_dict = update_data.model_dump(exclude_unset=True)
+        update_dict = update_data.model_dump(exclude_unset=True, by_alias=True)
         updated = db["class"].update_one({"_id": ObjectId(id)}, {"$set": update_dict})
         class_ = get_one(id)
         return class_

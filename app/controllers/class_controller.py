@@ -15,9 +15,10 @@ collection = Database().get_db().get_collection(COLLECTION.CLASS.value)
 
 
 def get_all() -> ClassCollection:
-    class_ = ClassCollection(classes=collection.find().to_list())
+    class_list = collection.find().to_list()
+    class_collection = ClassCollection(classes=class_list)
 
-    return class_
+    return class_collection
 
 
 def new(class_: ClassCreate) -> ClassBase:
@@ -28,8 +29,9 @@ def new(class_: ClassCreate) -> ClassBase:
 
     return created_class
 
+
 def get_one(id: str) -> ClassBase:
     class_ = collection.find_one({"_id": ObjectId(id)})
     # teacher = collection.find_one({"_id": ObjectId(class_.teacher.id)})
-    
+
     return class_
