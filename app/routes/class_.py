@@ -34,6 +34,7 @@ def get_classs():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @router.get("/{id}", response_model=ClassBase, response_description="Get One Class")
 def get_one_class(id: str, db: PyMongoDatabase = Depends(Database.get_db)):
     try:
@@ -42,6 +43,7 @@ def get_one_class(id: str, db: PyMongoDatabase = Depends(Database.get_db)):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @router.delete(
     "/{id}",
@@ -63,22 +65,18 @@ def delete_class(id: str, db: PyMongoDatabase = Depends(Database.get_db)):
     response_description="Update One Class",
 )
 def update_class(
-    id: str, update_data: ClassUpdate, db: PyMongoDatabase = Depends(Database.get_db)
+    id: str,
+    update_data: ClassUpdate = Body(...),
+    db: PyMongoDatabase = Depends(Database.get_db),
 ):
     try:
-        print(update_data)
         update_dict = update_data.model_dump(exclude_unset=True)
-        print(update_dict)
         updated = db["class"].update_one({"_id": ObjectId(id)}, {"$set": update_dict})
-        print(updated)
         class_ = get_one(id)
-        print(class_)
         return class_
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-
 
 
 @router.post(
@@ -95,4 +93,3 @@ def new_class(class_: ClassCreate = Body(...)):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-

@@ -32,7 +32,7 @@ class ClassCreate(ClassBase):
     pass
 
 
-class ClassUpdate:
+class ClassUpdate(ClassBase):
     model_config = config
 
     name: Optional[str] = None

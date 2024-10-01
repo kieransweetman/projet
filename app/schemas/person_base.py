@@ -37,7 +37,7 @@ class PersonCreate(PersonBase):
 class PersonUpdate(PersonBase):
     last_name: Optional[str] = None
     name: Optional[str] = None
-    birth_date: Optional[int] = None
+    birth_date: Optional[datetime] = None
     sex: Optional[str] = None
     classe: Optional[str] = None
     address: Optional[str] = None
