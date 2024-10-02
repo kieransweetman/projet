@@ -1,7 +1,8 @@
-from pydantic import ConfigDict
+from pydantic import ConfigDict, Field
 from .person_base import PersonBase, PersonCreate, PersonUpdate
 from typing import Optional, List
 from pydantic import BaseModel
+from utils.types import PyObjectId
 
 
 config = ConfigDict(
@@ -19,7 +20,12 @@ config = ConfigDict(
 )
 
 
+class EmbeddedClass(BaseModel):
+    id: PyObjectId = Field(alias="_id", default=None)
+
+
 class TeacherBase(PersonBase):
+    classes: List[EmbeddedClass] = []
     model_config = config
 
 

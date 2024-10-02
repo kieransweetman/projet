@@ -20,9 +20,7 @@ config = ConfigDict(
                 {
                     "subject": "math",
                     "value": "A",
-                    "trimester": {
-                        "name": "first",
-                    },
+                    "trimester": {},
                 },
             ],
         }
@@ -31,26 +29,25 @@ config = ConfigDict(
 
 
 class EmbbededTrimester(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    name: str = Field(...)
+    id: Optional[PyObjectId] = Field(alias="_id", default=None)
 
 
 class EmbeddedGrade(BaseModel):
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    subject: str = Field(...)
-    value: float = Field(...)
-    trimester: EmbbededTrimester = Field(..., title="trimester")
+    id: Optional[PyObjectId] = Field(alias="_id", default=None)
+    subject: Optional[str] = Field(default=None)
+    value: Optional[float] = Field(default=None)
+    trimester: Optional[EmbbededTrimester] = Field(title="trimester", default=None)
 
 
 class StudentBase(PersonBase):
     model_config = config
-    grades: Optional[List[EmbeddedGrade]] = []
+    grades: Optional[List[EmbeddedGrade]] = Field(default_factory=list)
     pass
 
 
 class StudentCreate(PersonCreate):
     model_config = config
-    grades: Optional[List[EmbeddedGrade]] = []
+    grades: Optional[List[EmbeddedGrade]] = Field(default_factory=list)
     origin_class_id: int = None
 
     pass

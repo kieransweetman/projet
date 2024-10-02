@@ -7,7 +7,7 @@ student_pipeline = [
             "as": "grades_info",
         }
     },
-    {"$unwind": {"path": "$grades_info", "preserveNullAndEmptyArrays": True}},
+    {"$unwind": {"path": "$grades_info", "preserveNullAndEmptyArrays": False}},
     {
         "$lookup": {
             "from": "subject",
@@ -64,13 +64,22 @@ teacher_pipeline = [
     {
         "$lookup": {
             "from": "class",
-            "localField": "class._id",
+            "localField": "_id",
             "foreignField": "teacher._id",
             "as": "class_info",
         }
     },
     {"$unwind": {"path": "$class_info", "preserveNullAndEmptyArrays": True}},
-    {"$addFields": {"class": {"_id": "$class_info._id"}}},
+    {
+        "$group": {
+            "_id": "$_id",
+            "classes": {
+                "$push": {
+                    "_id": "$class_info._id",
+                }
+            },
+        }
+    },
     {
         "$merge": {
             "into": "teacher",
