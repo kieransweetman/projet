@@ -17,7 +17,14 @@ from schemas.class_base import EmbeddedStudent
 
 from schemas.student_base import StudentBase
 
-from controllers.teacher_controller import get_all, get_one, new, teachers_students
+from controllers.teacher_controller import (
+    get_all,
+    get_one,
+    new,
+    teachers_students,
+    delete,
+    update,
+)
 
 
 router = APIRouter(prefix="/teachers", tags=["teachers"])
@@ -60,9 +67,9 @@ def new_teacher(teacher: TeacherCreate):
     status_code=status.HTTP_204_NO_CONTENT,
     response_description="Delete One Teacher",
 )
-def delete_teacher(id: str, db: PyMongoDatabase = Depends(Database.get_db)):
+def delete_teacher(id: str):
     try:
-        db["teacher"].delete_one({"_id": ObjectId(id)})
+        delete(id)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -74,14 +81,10 @@ def delete_teacher(id: str, db: PyMongoDatabase = Depends(Database.get_db)):
     status_code=status.HTTP_200_OK,
     response_description="Update One Teacher",
 )
-def update_teacher(
-    id: str, update_data: TeacherUpdate, db: PyMongoDatabase = Depends(Database.get_db)
-):
+def update_teacher(id: str, update_data: TeacherUpdate):
     try:
-        update_dict = update_data.model_dump(exclude_unset=True)
-        updated = db["teacher"].update_one({"_id": ObjectId(id)}, {"$set": update_dict})
 
-        teacher = get_one(id)
+        teacher = update(id, update_data)
 
         return teacher
 
@@ -98,7 +101,6 @@ def update_teacher(
 def get_students(id: str):
     try:
         students = teachers_students(id)
-        print(students)
 
         return students
 

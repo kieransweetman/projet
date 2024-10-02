@@ -78,16 +78,15 @@ def test_create_student():
         "/students/",
         json=req_data,
     )
-    print(response.json())
-    student = StudentBase(**response.json())
+
+    student_data = response.json()
 
     assert response.status_code == 201
-    assert student.original_id == t_s.original_id
+    assert student_data["original_id"] == t_s.original_id
 
 
 @pytest.mark.usefixtures("setup_student")
 def test_update_student():
-    original_student = test_student
     req_data = {"original_id": 888}
     logging.info(f"Sending data: {req_data}")
     response = client.patch(
@@ -95,11 +94,11 @@ def test_update_student():
         json=req_data,
     )
 
-    response_student = StudentBase(**response.json())
+    response_student = response.json()
     logging.info(f"Response data: {response_student}")
-
+    print(response_student)
     assert response.status_code == 200
-    assert response_student.original_id == req_data["original_id"]
+    assert response_student["original_id"] == req_data["original_id"]
 
 
 def test_delete_student():

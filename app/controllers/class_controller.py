@@ -17,8 +17,8 @@ def get_all() -> ClassCollection:
 
 
 def new(class_: ClassCreate) -> ClassBase:
-    model = class_.model_dump(by_alias=True, exclude=["id"])
-    model["teacher"]["_id"] = ObjectId(class_.teacher.id)
+    model = class_.model_dump(by_alias=True, exclude=["id"], exclude_none=True)
+    print(model)
     new_id = collection.insert_one(model).inserted_id
     created_class = collection.find_one({"_id": new_id})
 

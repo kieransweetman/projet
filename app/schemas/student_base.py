@@ -22,7 +22,7 @@ config = ConfigDict(
 )
 
 
-class EmbbededTrimester(BaseModel):
+class EmbeddedTrimester(BaseModel):
     id: Optional[PyObjectId] = Field(alias="_id", default=None)
 
 
@@ -30,7 +30,7 @@ class EmbeddedGrade(BaseModel):
     id: Optional[PyObjectId] = Field(alias="_id", default=None)
     subject: Optional[str] = Field(default=None)
     value: Optional[float] = Field(default=None)
-    trimester: Optional[EmbbededTrimester] = Field(title="trimester", default=None)
+    trimester: Optional[EmbeddedTrimester] = Field(title="trimester", default=None)
 
 
 class StudentBase(PersonBase):
@@ -52,7 +52,7 @@ class StudentUpdate(PersonUpdate):
 
     last_name: Optional[str] = None
     name: Optional[str] = None
-    birth_date: Optional[int] = None
+    birth_date: Optional[datetime] = None
     sex: Optional[str] = None
     classe: Optional[str] = None
     address: Optional[str] = None

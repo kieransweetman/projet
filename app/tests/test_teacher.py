@@ -74,9 +74,9 @@ def test_create_teacher():
         "/teachers/",
         json=req_data,
     )
-    teacher = TeacherBase(**response.json())
 
     assert response.status_code == 201
+    assert response.json()["original_id"] == 777
 
 
 @pytest.mark.usefixtures("setup_teacher")
@@ -90,11 +90,11 @@ def test_update_teacher(setup_teacher):
     )
 
     logging.info("json\n", response.json())
-    response_teacher = TeacherBase(**response.json())
+    response_teacher = response.json()
     logging.info(f"Response data: {response_teacher}")
-
+    print(response_teacher)
     assert response.status_code == 200
-    assert response_teacher.original_id == 888
+    assert response_teacher["original_id"] == 888
 
 
 def test_delete_teacher():

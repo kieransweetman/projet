@@ -16,7 +16,14 @@ from schemas.student_base import (
     StudentUpdate,
 )
 
-from controllers.student_controller import get_all, new, get_one, get_grades
+from controllers.student_controller import (
+    get_all,
+    new,
+    get_one,
+    get_grades,
+    delete,
+    update,
+)
 
 
 router = APIRouter(prefix="/students", tags=["students"])
@@ -39,10 +46,15 @@ def get_students():
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/{id}", response_model=StudentBase, response_description="Get One Student")
-def get_one_student(id: str, db: PyMongoDatabase = Depends(Database.get_db)):
+@router.get(
+    "/{id}",
+    response_model=StudentBase,
+    response_description="Get One Student",
+    status_code=status.HTTP_200_OK,
+)
+def get_one_student(id: str):
     try:
-        student = db["student"].find_one({"_id": ObjectId(id)})
+        student = get_one(id)
         return student
 
     except Exception as e:
@@ -68,10 +80,9 @@ def get_student_grades(id: str):
     status_code=status.HTTP_204_NO_CONTENT,
     response_description="Delete One Student",
 )
-def delete_student(id: str, db: PyMongoDatabase = Depends(Database.get_db)):
+def delete_student(id: str):
     try:
-        db["student"].delete_one({"_id": ObjectId(id)})
-
+        delete(id)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -82,12 +93,9 @@ def delete_student(id: str, db: PyMongoDatabase = Depends(Database.get_db)):
     status_code=status.HTTP_200_OK,
     response_description="Update One Student",
 )
-def update_student(
-    id: str, update_data: StudentUpdate, db: PyMongoDatabase = Depends(Database.get_db)
-):
+def update_student(id: str, update_data: StudentUpdate = Body(...)):
     try:
-        update_dict = update_data.model_dump(exclude_unset=True)
-        updated = db["student"].update_one({"_id": ObjectId(id)}, {"$set": update_dict})
+        update(id, update_data)
 
         student = get_one(id)
 
@@ -106,9 +114,7 @@ def update_student(
 )
 def new_student(student: StudentCreate = Body(...)):
     try:
-
         created_student = new(student)
-
         return created_student
 
     except Exception as e:

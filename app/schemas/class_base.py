@@ -7,15 +7,15 @@ config = ConfigDict(
     json_schema_extra={
         "example": {
             "name": "Class name",
-            "teacher": {"_id": "ObjectId"},
-            "students": [{"_id": "ObjectId", "name": "Student name"}],
+            "teacher": {},
+            "students": [],
         }
     },
 )
 
 
 class EmbeddedTeacher(BaseModel):
-    id: PyObjectId = Field(..., alias="_id")
+    id: Optional[PyObjectId] = Field(alias="_id", default=None)
 
 
 class EmbeddedStudent(BaseModel):
