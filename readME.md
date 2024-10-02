@@ -1,4 +1,4 @@
-# setup
+# setup/Teardown
 
 ## 1. build
 
@@ -17,6 +17,9 @@
 
 `docker-compose up`
 
+## 3. tear down
+
+`docker-compose down`
 
 
 # Structure
