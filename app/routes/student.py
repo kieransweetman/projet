@@ -57,9 +57,8 @@ def get_one_student(id: str, db: PyMongoDatabase = Depends(Database.get_db)):
 )
 def get_student_grades(id: str):
     try:
-        student = get_grades(id)
-        print(student)
-        return [EmbeddedGrade[grade] for grade in student.grades]
+        grades = get_grades(id)
+        return grades
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

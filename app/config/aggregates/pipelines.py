@@ -48,7 +48,16 @@ class_pipeline = [
             "from": "student",
             "localField": "original_id",
             "foreignField": "origin_class_id",
-            "as": "students",
+            "as": "students_list",
+        }
+    },
+    {"$unwind": {"path": "$students_list", "preserveNullAndEmptyArrays": True}},
+    {
+        "$group": {
+            "_id": "$_id",
+            "students": {
+                "$push": {"_id": "$students_list._id", "name": "$students_list.name"}
+            },
         }
     },
     {

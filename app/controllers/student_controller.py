@@ -7,6 +7,7 @@ from schemas.student_base import (
     StudentCollection,
     StudentBase,
     StudentCreate,
+    EmbeddedGrade,
 )
 
 
@@ -35,4 +36,4 @@ def get_one(id: str) -> StudentBase:
 
 def get_grades(id: str):
     model = collection.find_one({"_id": ObjectId(id)})
-    return StudentBase(**model)
+    return [EmbeddedGrade(**grade) for grade in model["grades"]]
