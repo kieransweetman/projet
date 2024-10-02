@@ -8,6 +8,11 @@ from models.class_ import schema as class_schema
 from models.grade import schema as grade_schema
 from models.subject import schema as subject_schema
 from models.trimester import schema as trimester_schema
+from config.aggregates.pipelines import (
+    student_pipeline,
+    class_pipeline,
+    teacher_pipeline,
+)
 
 
 class Database:
@@ -53,7 +58,7 @@ class Database:
             "teacher",
             "class",
             "subject",
-            # "grade",
+            "grade",
             "trimester",
         ]
         validators = {
@@ -61,16 +66,28 @@ class Database:
             "teacher": teacher_schema,
             "class": class_schema,
             "subject": subject_schema,
-            # "grade": grade_schema,
+            "grade": grade_schema,
             "trimester": trimester_schema,
+        }
+        pipelines = {
+            "student": student_pipeline,
+            "teacher": teacher_pipeline,
+            "class": class_pipeline,
         }
 
         existing_collections = db.list_collection_names()
         for collection in collections:
-            if collection not in existing_collections:
-                db.create_collection(collection, validator=validators[collection])
-            else:
-                Database.update_validator(collection, validators[collection])
+
+            try:
+                if collection not in existing_collections:
+                    print(f"\n###\nCreating collection {collection}\n###\n")
+                    db.create_collection(collection, validator=validators[collection])
+                else:
+                    Database.update_validator(collection, validators[collection])
+            except Exception as e:
+                print(
+                    f"Error while creating collection &/Or  validator {collection}: {e} – {collection}"
+                )
 
         # launch csv script
         # only process if we haven't alredy by checking if the text file exists
@@ -81,6 +98,12 @@ class Database:
         if os.path.exists("config/processed.txt") is False:
             print("Inserting data")
             csv_parser()
+
+            for [collection, pipeline] in pipelines.items():
+                try:
+                    db.get_collection(collection).aggregate(pipeline)
+                except Exception as e:
+                    print(f"Error while aggregating {collection}: {e}")
         else:
             print("Data already processed")
 

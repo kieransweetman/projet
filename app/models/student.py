@@ -24,6 +24,7 @@ schema = {
                 "bsonType": "string",
                 "description": "must be a string and is required",
             },
+            "origin_class_id": {"bsonType": "int"},
             "grades": {
                 "bsonType": "array",
                 "items": {

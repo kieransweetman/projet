@@ -16,7 +16,7 @@ from schemas.student_base import (
     StudentUpdate,
 )
 
-from controllers.student_controller import get_all, new, get_one
+from controllers.student_controller import get_all, new, get_one, get_grades
 
 
 router = APIRouter(prefix="/students", tags=["students"])
@@ -57,8 +57,9 @@ def get_one_student(id: str, db: PyMongoDatabase = Depends(Database.get_db)):
 )
 def get_student_grades(id: str):
     try:
-        student = get_one(id)
-        return student.grades
+        student = get_grades(id)
+        print(student)
+        return [EmbeddedGrade[grade] for grade in student.grades]
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

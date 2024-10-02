@@ -29,11 +29,13 @@ def add_student(class_id: str, students: List[EmbeddedStudent]) -> ClassBase:
     class_model = collection.find_one({"_id": ObjectId(class_id)})
     c = ClassBase(**class_model)
     for student in students:
-        c.students.append(student)
+        if db["student"].find_one({"_id": student.id}):
+            c.students.append(student)
+        else:
+            raise Exception(f"Student not found: {student.name} - id: {student.id}")
 
     dumped = c.model_dump(by_alias=True, exclude=["id"])
 
-    print("dumping\n###\n", dumped)
     dumped["teacher"]["_id"] = ObjectId(dumped["teacher"]["_id"])
 
     for s in dumped["students"]:

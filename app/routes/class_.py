@@ -13,7 +13,12 @@ from schemas.class_base import (
     EmbeddedStudent,
 )
 
-from controllers.class_controller import get_all, new, add_student, get_students
+from controllers.class_controller import (
+    get_all,
+    new,
+    add_student,
+    get_students,
+)
 
 
 router = APIRouter(prefix="/class", tags=["class"])
@@ -69,14 +74,14 @@ def append_student(id: str, students: List[EmbeddedStudent] = Body(...)):
 
 @router.get(
     "/{id}/students",
-    # response_model=List[EmbeddedStudent],
+    response_model=List[EmbeddedStudent],
     response_description="Get all students in a class",
     response_model_by_alias=True,
     status_code=status.HTTP_200_OK,
 )
-def students_in_class(id: str):
+def students_in_class(class_id: str):
     try:
-        students = get_students(id)
+        students = get_students(class_id)
         return students
 
     except Exception as e:

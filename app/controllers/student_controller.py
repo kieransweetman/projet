@@ -30,11 +30,9 @@ def new(student: StudentCreate) -> StudentBase:
 
 def get_one(id: str) -> StudentBase:
     student = collection.find_one({"_id": ObjectId(id)})
-
     return student
 
 
 def get_grades(id: str):
-    student = StudentBase(**collection.find_one({"_id": ObjectId(id)}))
-
-    return student.grades
+    model = collection.find_one({"_id": ObjectId(id)})
+    return StudentBase(**model)

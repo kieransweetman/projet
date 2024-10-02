@@ -50,6 +50,8 @@ class StudentBase(PersonBase):
 
 class StudentCreate(PersonCreate):
     model_config = config
+    grades: Optional[List[EmbeddedGrade]] = []
+    origin_class_id: int = None
 
     pass
 
