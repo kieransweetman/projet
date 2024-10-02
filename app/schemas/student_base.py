@@ -48,7 +48,7 @@ class StudentBase(PersonBase):
 class StudentCreate(PersonCreate):
     model_config = config
     grades: Optional[List[EmbeddedGrade]] = Field(default_factory=list)
-    origin_class_id: int = None
+    origin_class_id: Optional[int] = Field(title="origin class id", default=0)
 
     pass
 

@@ -42,7 +42,6 @@ def get_students():
 @router.get("/{id}", response_model=StudentBase, response_description="Get One Student")
 def get_one_student(id: str, db: PyMongoDatabase = Depends(Database.get_db)):
     try:
-        # students = db.query(StudentBase).filter(StudentBase.id == codecli).first()
         student = db["student"].find_one({"_id": ObjectId(id)})
         return student
 
@@ -114,7 +113,3 @@ def new_student(student: StudentCreate = Body(...)):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-
-## TODO
-## get all grades for student

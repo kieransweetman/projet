@@ -16,7 +16,7 @@ class TrimesterBase(BaseModel):
     id: PyObjectId = Field(default=None, alias="_id")
     name: str = Field(..., title="trimester name")
     date: datetime = Field(..., title="trimester date")
-    original_id: Optional[int] = Field(title="original id", default=None)
+    original_id: Optional[int] = Field(title="original id", default=0)
 
     @field_validator("date", mode="before")
     def parse_date(cls, value):

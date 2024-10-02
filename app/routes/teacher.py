@@ -89,10 +89,6 @@ def update_teacher(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-## TODO
-## list students & their grades
-
-
 @router.get(
     "/{id}/students",
     response_model=List[EmbeddedStudent],
