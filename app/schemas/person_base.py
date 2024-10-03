@@ -21,6 +21,8 @@ class PersonBase(BaseModel):
 
     @field_serializer("birth_date")
     def serialize_birth_date(self, birth_date: datetime, _info):
+        if birth_date is None:
+            return None
         return birth_date.replace(tzinfo=None).isoformat()
 
     def model_dump(self, **kwargs):

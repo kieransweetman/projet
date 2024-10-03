@@ -117,7 +117,6 @@ def test_create_class(set_teacher):
     clean()
 
     req_data = test_class.model_dump(by_alias=True)
-    req_data["teacher"] = {"_id": str(set_teacher["_id"])}
     logging.info(f"Request data\n: {req_data}")
     response = client.post(
         "/class/",

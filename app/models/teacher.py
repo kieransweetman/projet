@@ -25,9 +25,12 @@ schema = {
                 "description": "must be a string and is required",
             },
             "class": {
-                "bsonType": "object",
-                "properties": {
-                    "_id": {"bsonType": "objectId"},
+                "bsonType": "array",
+                "items": {
+                    "bsonType": "object",
+                    "properties": {
+                        "_id": {"bsonType": "objectId"},
+                    },
                 },
             },
         },

@@ -6,11 +6,13 @@ from schemas.teacher_base import (
     TeacherBase,
     TeacherCreate,
     TeacherCollection,
+    TeacherUpdate,
 )
 
 
 db = Database().get_db()
-collection = Database().get_db().get_collection(COLLECTION.TEACHER.value)
+collection = db.get_collection(COLLECTION.TEACHER.value)
+class_collection = db.get_collection(COLLECTION.CLASS.value)
 
 
 def get_all() -> TeacherCollection:
@@ -26,7 +28,24 @@ def new(teacher: TeacherCreate) -> TeacherBase:
 
     return created_teacher
 
+
 def get_one(id: str) -> TeacherBase:
     teacher = collection.find_one({"_id": ObjectId(id)})
 
     return teacher
+
+
+def delete(id: str):
+    collection.delete_one({"_id": ObjectId(id)})
+
+
+def teachers_students(teacher_id: str):
+    classes = class_collection.find({"teacher._id": ObjectId(teacher_id)}).to_list()
+    students = [s for c in classes for s in c["students"]]
+    return students
+
+
+def update(id: str, data: TeacherUpdate):
+    model = data.model_dump(by_alias=True, exclude=["id"], exclude_none=True)
+    collection.update_one({"_id": ObjectId(id)}, {"$set": model})
+    return get_one(id)
