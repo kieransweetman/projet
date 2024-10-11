@@ -1,4 +1,4 @@
-db/data/*
+db/data/
 .venv
 .env
 .DS_STORE
