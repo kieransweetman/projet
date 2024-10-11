@@ -17,6 +17,12 @@
 
 `docker-compose up`
 
+Resetting the database requires a few sets.
+
+1. delete `db/data` folder - this will reset persisted database info
+2. delete `config/processed`
+3. launch containers
+
 ## 3. tear down
 
 `docker-compose down`

@@ -60,7 +60,10 @@ def parse_class(line):
     teacher = TeacherBase(**db["teacher"].find_one({"original_id": int(line[2])}))
 
     class_ = ClassCreate(
-        name=line[1], original_id=line[0], teacher={"_id": teacher.id}, students=[]
+        name=line[1],
+        original_id=line[0],
+        teacher={"_id": ObjectId(teacher.id)},
+        students=[],
     ).model_dump(by_alias=True, exclude=["id"])
     class_["teacher"]["_id"] = ObjectId(class_["teacher"]["_id"])
     return class_

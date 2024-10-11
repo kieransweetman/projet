@@ -19,7 +19,7 @@ class EmbeddedTeacher(BaseModel):
 
 
 class EmbeddedStudent(BaseModel):
-    id: PyObjectId = Field(..., alias="_id")
+    id: Optional[PyObjectId] = Field(..., alias="_id")
     name: str = Field(...)
 
 
