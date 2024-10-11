@@ -27,7 +27,7 @@ MONGODB_INITDB_ROOT_PASSWORD=pass
 
 `docker-compose up`
 
-Resetting the database requires a few sets.
+Resetting the database requires a few steps.
 
 1. delete `db/data` folder - this will reset persisted database info
 2. delete `config/processed`
