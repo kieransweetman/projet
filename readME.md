@@ -1,5 +1,15 @@
 # setup/Teardown
 
+
+## i. 
+
+After cloning the project, create a `.env` file based off of the `.prod.env` file. Add the following credentials to the `.env` file:
+
+```.env
+MONGODB_INITDB_ROOT_USERNAME=user
+MONGODB_INITDB_ROOT_PASSWORD=pass
+```
+
 ## 1. build
 
 `docker-compose up --build`
